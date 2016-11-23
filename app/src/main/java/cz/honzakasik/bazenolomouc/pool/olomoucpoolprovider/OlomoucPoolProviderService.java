@@ -21,11 +21,6 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
 
     private static final String
             ACTION_DONE = "DOWNLOAD_DONE",
-            HTML_TR = "tr",
-            HTML_IMG = "img",
-            HTML_SRC_ATTR = "src",
-            HTML_TABLE = "table",
-            SWIMMING_POOL_ELEMENT_ID = "bazen",
             URL = "http://www.olterm.cz/plavecky-bazen/rozpis-plavani?den={DAY}&mesic={MONTH}&rok={YEAR}&hodina={HOURS}&minuta={MINUTES}",
             DAY = Pattern.quote("{DAY}"),
             MONTH = Pattern.quote("{MONTH}"),
@@ -43,8 +38,7 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         long datetime = intent.getLongExtra(DATETIME_EXTRA_IDENTIFIER, -1);
         try {
             Document doc = Jsoup.connect(parseURLForDatetime(new Date(datetime))).get();
-            Element poolElement = doc.getElementById(SWIMMING_POOL_ELEMENT_ID);
-            SwimmingPool swimmingPool = parseSwimmingPoolFromPoolElement(poolElement);
+            SwimmingPool swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
 
             Intent dataIntent = new Intent();
             dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);
@@ -60,23 +54,6 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             e.printStackTrace();
             //TODO
         }
-    }
-
-    private SwimmingPool parseSwimmingPoolFromPoolElement(Element poolTable) {
-        SwimmingPool.Builder builder = new SwimmingPool.Builder();
-
-        Element secondRowInPoolTable = poolTable.getElementsByTag(HTML_TR).get(1);
-        Element innerPoolTable = secondRowInPoolTable.getElementsByTag(HTML_TABLE).get(0);
-        SwimmingPool.TrackOrientation orientation = findSwimmingPoolOrientationFromInnerPoolTable(innerPoolTable);
-
-        builder.orientation(orientation);
-
-        for (Element track : innerPoolTable.getElementsByTag(HTML_IMG)) {
-            boolean isForPublic = isTrackAvailableIsForPublicByImageElement(track);
-            builder.track(new SwimmingPool.Track(isForPublic));
-        }
-
-        return builder.build();
     }
 
     private String parseURLForDatetime(Date date) throws MalformedURLException {
@@ -96,16 +73,5 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 .replaceAll(MINUTES, String.valueOf(minutes));
     }
 
-    private SwimmingPool.TrackOrientation findSwimmingPoolOrientationFromInnerPoolTable(Element innerPoolTable) {
-        if (innerPoolTable.getElementsByTag(HTML_IMG).attr(HTML_SRC_ATTR).matches("d\\dx?\\.gif")) {
-            return SwimmingPool.TrackOrientation.HORIZONTAL;
-        } else {
-            return SwimmingPool.TrackOrientation.VERTICAL;
-        }
-    }
-
-    private boolean isTrackAvailableIsForPublicByImageElement(Element trackImage) {
-        return !trackImage.attr(HTML_SRC_ATTR).contains("x");
-    }
 
 }

@@ -20,6 +20,14 @@ public class SwimmingPool implements Parcelable {
         this.orientation = builder.orientation;
     }
 
+    public List<Track> getTracks() {
+        return tracks;
+    }
+
+    public TrackOrientation getOrientation() {
+        return orientation;
+    }
+
     /**
      * Orientation of tracks in swimming pool
      */
@@ -44,6 +52,10 @@ public class SwimmingPool implements Parcelable {
 
         public Track(boolean isForPublic) {
             this.isForPublic = isForPublic;
+        }
+
+        public boolean isForPublic() {
+            return isForPublic;
         }
     }
 
