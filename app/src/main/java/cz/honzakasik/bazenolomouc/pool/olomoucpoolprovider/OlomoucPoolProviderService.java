@@ -5,7 +5,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

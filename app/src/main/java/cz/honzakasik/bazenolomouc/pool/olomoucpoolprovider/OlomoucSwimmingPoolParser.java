@@ -15,10 +15,18 @@ public class OlomoucSwimmingPoolParser {
 
     private final Element document;
 
+    /**
+     * Creates new parser
+     * @param document document from which the {@link SwimmingPool} will be parsed
+     */
     public OlomoucSwimmingPoolParser(Document document) {
         this.document = document;
     }
 
+    /**
+     * Parses swimming pool from document
+     * @return parsed swimming pool
+     */
     public SwimmingPool parseSwimmingPool() {
         SwimmingPool.Builder builder = new SwimmingPool.Builder();
 
@@ -28,7 +36,6 @@ public class OlomoucSwimmingPoolParser {
 
         builder.orientation(orientation);
 
-        System.out.println(getPoolTrackElements(innerPoolTable));
         for (Element track : getPoolTrackElements(innerPoolTable)) {
             boolean isForPublic = isTrackAvailableIsForPublicByImageElement(track);
             builder.track(new SwimmingPool.Track(isForPublic));
@@ -38,8 +45,6 @@ public class OlomoucSwimmingPoolParser {
     }
 
     private SwimmingPool.TrackOrientation findSwimmingPoolOrientationFromInnerPoolTable(Element innerPoolTable) {
-        System.out.println(getPoolTrackElements(innerPoolTable));
-        System.out.println(getPoolTrackElements(innerPoolTable).attr(HTML_SRC_ATTR));
         if (getPoolTrackElements(innerPoolTable).attr(HTML_SRC_ATTR).matches(".*d\\dx?\\.gif")) {
             return SwimmingPool.TrackOrientation.HORIZONTAL;
         } else {

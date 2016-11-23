@@ -70,8 +70,6 @@ public class OlomoucSwimmingPoolParserUnitTest {
     @Test
     public void testParsingHorizontalPoolOrientation() {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
-        System.out.println(document);
-
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
         Assert.assertEquals(SwimmingPool.TrackOrientation.HORIZONTAL, pool.getOrientation());
