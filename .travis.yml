@@ -38,4 +38,5 @@ script:
   - android list target
   - ./gradlew clean
   - ./gradlew assembleDebug
+  - ./gradlew test
   # - ./gradlew assembleDebugAndroidTest
