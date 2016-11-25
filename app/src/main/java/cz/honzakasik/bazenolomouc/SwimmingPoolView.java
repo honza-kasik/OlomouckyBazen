@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 
@@ -57,6 +58,7 @@ public class SwimmingPoolView extends View {
 
         super.onDraw(canvas);
 
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), linePaint);
         drawHorizontalSwimmingPool(canvas);
     }
 
@@ -78,14 +80,15 @@ public class SwimmingPoolView extends View {
         final int ROTATION = getDisplay().getRotation();
         final boolean IS_IN_LANDSCAPE = ROTATION == Surface.ROTATION_90 || ROTATION == Surface.ROTATION_270;
 
+        final int COUNT_OF_TRACKS = swimmingPool.getTracks().size();
         final int X_PADDING = 30;
         final int Y_PADDING = 30;
-        final int INNER_POOL_HEIGHT = getHeight() - 2 * Y_PADDING;
-        final int INNER_POOL_WIDTH = getWidth() - 2 * X_PADDING;
-        final int TRACK_WIDTH = IS_IN_LANDSCAPE ? INNER_POOL_WIDTH/8 : INNER_POOL_HEIGHT/8;
-        final int TRACK_LENGTH = IS_IN_LANDSCAPE ? INNER_POOL_HEIGHT : INNER_POOL_WIDTH;
+        final int INNER_POOL_HEIGHT = canvas.getHeight() - 2 * Y_PADDING;
+        final int INNER_POOL_WIDTH = canvas.getWidth() - 2 * X_PADDING;
+        final int TRACK_WIDTH = IS_IN_LANDSCAPE ? INNER_POOL_WIDTH/COUNT_OF_TRACKS : INNER_POOL_HEIGHT/COUNT_OF_TRACKS;
+        final int TRACK_LENGTH = IS_IN_LANDSCAPE ? getHeight() - Y_PADDING : getWidth() - X_PADDING;
 
-        for (int i = 0; i < swimmingPool.getTracks().size(); i++) {
+        for (int i = 0; i < COUNT_OF_TRACKS; i++) {
             SwimmingPool.Track currentTrack = swimmingPool.getTracks().get(i);
 
             Rect rect;
@@ -108,5 +111,14 @@ public class SwimmingPoolView extends View {
             }
         }
     }
+
+    /*@Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+
+        //int myWidth = (int) (parentHeight * 0.5);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }*/
 
 }
