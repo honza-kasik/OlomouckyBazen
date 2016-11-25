@@ -39,7 +39,7 @@ public class SwimmingPoolView extends View {
 
     private Paint initLinePaint() {
         Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(Color.BLACK);
+        linePaint.setColor(Color.rgb(99, 179, 255));
         linePaint.setStrokeWidth(2);
         return linePaint;
     }
@@ -65,27 +65,26 @@ public class SwimmingPoolView extends View {
     private Paint initNotAvailableForPublicPaint() {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setColor(Color.RED);
+        paint.setColor(Color.rgb(244, 69, 66));
         return paint;
     }
 
     private Paint initAvailableForPublicPaint() {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.rgb(66, 244, 116));
         return paint;
     }
 
     private void drawHorizontalSwimmingPool(Canvas canvas) {
-        final int ROTATION = getDisplay().getRotation();
-        final boolean IS_IN_LANDSCAPE = ROTATION == Surface.ROTATION_90 || ROTATION == Surface.ROTATION_270;
+        final boolean IS_IN_LANDSCAPE = isInLandscape();
 
         final int COUNT_OF_TRACKS = swimmingPool.getTracks().size();
-        final int X_PADDING = 30;
-        final int Y_PADDING = 30;
+        final int X_PADDING = 10;
+        final int Y_PADDING = 10;
         final int INNER_POOL_HEIGHT = canvas.getHeight() - 2 * Y_PADDING;
         final int INNER_POOL_WIDTH = canvas.getWidth() - 2 * X_PADDING;
-        final int TRACK_WIDTH = IS_IN_LANDSCAPE ? INNER_POOL_WIDTH/COUNT_OF_TRACKS : INNER_POOL_HEIGHT/COUNT_OF_TRACKS;
+        final int TRACK_WIDTH = IS_IN_LANDSCAPE ? INNER_POOL_WIDTH / COUNT_OF_TRACKS : INNER_POOL_HEIGHT / COUNT_OF_TRACKS;
         final int TRACK_LENGTH = IS_IN_LANDSCAPE ? getHeight() - Y_PADDING : getWidth() - X_PADDING;
 
         for (int i = 0; i < COUNT_OF_TRACKS; i++) {
@@ -101,6 +100,7 @@ public class SwimmingPoolView extends View {
             }
 
             canvas.drawRect(rect, currentTrack.isForPublic() ? availableForPublic : notAvailableForPublic);
+            drawIndexOnCenterOfRectangle(canvas, rect, i);
 
             if (IS_IN_LANDSCAPE) {
                 int lineOffset = (TRACK_WIDTH * i) + Y_PADDING;
@@ -112,13 +112,22 @@ public class SwimmingPoolView extends View {
         }
     }
 
-    /*@Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+    private void drawIndexOnCenterOfRectangle(Canvas canvas, Rect rect, int i) {
+        final String text = String.valueOf(i + 1);
 
-        //int myWidth = (int) (parentHeight * 0.5);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }*/
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setShadowLayer(2f, 0f, 1f, Color.GRAY);
+        paint.setTextAlign(Paint.Align.CENTER);
+        //paint.getTextBounds(text, 0, text.length(), rect);
+        paint.setTextSize(15 * getResources().getDisplayMetrics().density);
 
+        canvas.drawText(text, rect.centerX(), rect.centerY(), paint);
+    }
+
+    private boolean isInLandscape(){
+        final int ROTATION = getDisplay().getRotation();
+        return ROTATION == Surface.ROTATION_90 || ROTATION == Surface.ROTATION_270;
+    }
 }
