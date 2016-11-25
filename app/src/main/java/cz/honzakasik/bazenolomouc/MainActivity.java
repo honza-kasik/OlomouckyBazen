@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         logger.debug("Starting service!");
-        startService(poolProviderServiceIntent);
+        //startService(poolProviderServiceIntent);
 
 
     }

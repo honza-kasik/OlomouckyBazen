@@ -1,10 +1,12 @@
 package cz.honzakasik.bazenolomouc;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.View;
@@ -42,7 +44,7 @@ public class SwimmingPoolView extends View {
 
     private Paint initLinePaint() {
         Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(Color.rgb(99, 179, 255));
+        linePaint.setColor(ContextCompat.getColor(getContext(), R.color.swimmingPoolBorder));
         linePaint.setStrokeWidth(2);
         return linePaint;
     }
@@ -74,14 +76,14 @@ public class SwimmingPoolView extends View {
     private Paint initNotAvailableForPublicPaint() {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setColor(Color.rgb(244, 69, 66));
+        paint.setColor(ContextCompat.getColor(getContext(), R.color.swimmingPoolNotForPublic));
         return paint;
     }
 
     private Paint initAvailableForPublicPaint() {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(66, 244, 116));
+        paint.setColor(ContextCompat.getColor(getContext(), R.color.swimmingPoolForPublic));
         return paint;
     }
 
@@ -146,7 +148,8 @@ public class SwimmingPoolView extends View {
         final String text = String.valueOf(i + 1);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(track.isForPublic() ? Color.rgb(68, 114, 37) : Color.rgb(255, 216, 218));
+        paint.setColor(track.isForPublic() ? ContextCompat.getColor(getContext(), R.color.swimmingPoolForPublicText) :
+                ContextCompat.getColor(getContext(), R.color.swimmingPoolNotForPublicText));
         paint.setStyle(Paint.Style.FILL);
         paint.setTextSize(15 * getResources().getDisplayMetrics().density);
 

@@ -10,10 +10,23 @@
 
     <style name="SwimmingPoolActivity" />
     
-    <style name="SwimmingPoolActivity.Clock">
-        <item name="android:textSize">30sp</item>
-        <item name="android:color">#ffffff</item>
+    <style name="SwimmingPoolActivity.Selector">
         <item name="android:background">#66bb6a</item>
+        <item name="android:elevation">3dp</item>
     </style>
+
+    <style name="SwimmingPoolActivity.ClockText">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">90sp</item>
+        <item name="android:color">#ffffff</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.DateText">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:color">#ffffff</item>
+        <item name="android:layout_marginBottom">20dp</item>
+    </style>
+
 
 </resources>
