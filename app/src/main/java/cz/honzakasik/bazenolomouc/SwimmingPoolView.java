@@ -39,7 +39,7 @@ public class SwimmingPoolView extends View {
 
     private int measuredWidth, measuredHeight;
 
-    private final int X_PADDING = 10;
+    private final int X_PADDING = 20;
     private final int Y_PADDING = 10;
 
     private Paint initLinePaint() {
@@ -88,38 +88,23 @@ public class SwimmingPoolView extends View {
     }
 
     private void drawVerticalSwimmingPool(Canvas canvas) {
-        //TODO strip dependency on rotation
-        final boolean IS_IN_LANDSCAPE = isInLandscape();
 
         final int COUNT_OF_TRACKS = swimmingPool.getTracks().size();
-        final int INNER_POOL_HEIGHT = canvas.getHeight() - 2 * Y_PADDING;
-        final int INNER_POOL_WIDTH = canvas.getWidth() - 2 * X_PADDING;
-        final int TRACK_WIDTH = !IS_IN_LANDSCAPE ? INNER_POOL_WIDTH / COUNT_OF_TRACKS : INNER_POOL_HEIGHT / COUNT_OF_TRACKS;
-        final int TRACK_LENGTH = !IS_IN_LANDSCAPE ? getHeight() - Y_PADDING : getWidth() - X_PADDING;
+        final int INNER_POOL_WIDTH = canvas.getWidth() - 2 * Y_PADDING;
+        final int TRACK_WIDTH = INNER_POOL_WIDTH / COUNT_OF_TRACKS;
+        final int TRACK_LENGTH = getHeight() - X_PADDING;
 
         for (int i = 0; i < COUNT_OF_TRACKS; i++) {
             SwimmingPool.Track currentTrack = swimmingPool.getTracks().get(i);
 
-            Rect rect;
-            if (!IS_IN_LANDSCAPE) {
-                rect = new Rect(0, X_PADDING, TRACK_WIDTH, TRACK_LENGTH);
-                rect.offset((TRACK_WIDTH * i) + Y_PADDING, 0);
-            } else {
-                rect = new Rect(X_PADDING, 0, TRACK_LENGTH, TRACK_WIDTH);
-                rect.offset(0, (TRACK_WIDTH * i) + Y_PADDING);
-            }
-
+            Rect rect = new Rect(0, X_PADDING, TRACK_WIDTH, TRACK_LENGTH);
+            rect.offset((TRACK_WIDTH * i) + Y_PADDING, 0);
 
             canvas.drawRect(rect, currentTrack.isForPublic() ? availableForPublic : notAvailableForPublic);
             drawIndexOnCenterOfRectangle(canvas, rect, i, currentTrack);
 
-            if (!IS_IN_LANDSCAPE) {
-                int lineOffset = (TRACK_WIDTH * i) + Y_PADDING;
-                canvas.drawLine(lineOffset, X_PADDING, lineOffset, TRACK_LENGTH, linePaint);
-            } else {
-                int lineOffset = (TRACK_WIDTH * i) + Y_PADDING;
-                canvas.drawLine(X_PADDING, lineOffset, TRACK_LENGTH, lineOffset, linePaint);
-            }
+            int lineOffset = (TRACK_WIDTH * i) + Y_PADDING;
+            canvas.drawLine(lineOffset, X_PADDING, lineOffset, TRACK_LENGTH, linePaint);
         }
     }
 
@@ -155,11 +140,6 @@ public class SwimmingPoolView extends View {
 
         float textWidth = paint.measureText(text);
         canvas.drawText(text, rect.exactCenterX() - (textWidth/2), rect.exactCenterY() + (textWidth/2), paint);
-    }
-
-    private boolean isInLandscape(){
-        final int ROTATION = getDisplay().getRotation();
-        return ROTATION == Surface.ROTATION_90 || ROTATION == Surface.ROTATION_270;
     }
 
     @Override
