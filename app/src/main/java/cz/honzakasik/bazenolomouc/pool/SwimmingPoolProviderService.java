@@ -5,6 +5,7 @@ import android.app.IntentService;
 public abstract class SwimmingPoolProviderService extends IntentService {
 
     public static final String
+            ACTION_DONE = "DOWNLOAD_DONE",
             SWIMMING_POOL_EXTRA_IDENTIFIER = "SWIMMING_POOL",
             DATETIME_EXTRA_IDENTIFIER = "DATETIME";
 

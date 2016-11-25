@@ -3,6 +3,8 @@ package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 
@@ -20,6 +22,8 @@ public class OlomoucSwimmingPoolParser {
      * @param document document from which the {@link SwimmingPool} will be parsed
      */
     public OlomoucSwimmingPoolParser(Document document) {
+        /*Logger logger = LoggerFactory.getLogger(OlomoucSwimmingPoolParser.class);
+        logger.debug(document.outerHtml());*/
         this.document = document;
     }
 
