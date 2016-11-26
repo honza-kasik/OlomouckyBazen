@@ -10,7 +10,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         try {
-            Reservoir.init(this, 2048);
+            Reservoir.init(this, 8192);
         } catch (Exception e) {
             e.printStackTrace();
         }
