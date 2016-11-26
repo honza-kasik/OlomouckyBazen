@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         Calendar newTime = (Calendar) currentlyDisplayedDate.clone();
                         newTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         newTime.set(Calendar.MINUTE, minute);
-                        setSwimmingPoolViewForDate(newTime);
+                        setSwimmingPoolViewForDate(getClosestValidDateFrom(newTime));
                     }
                 }, currentlyDisplayedDate.get(Calendar.HOUR_OF_DAY), currentlyDisplayedDate.get(Calendar.MINUTE), true);
                 dialog.show();
@@ -167,7 +167,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Calendar getClosestValidDateFromNow() {
-        Calendar datetime = Calendar.getInstance();
+        return getClosestValidDateFrom(Calendar.getInstance());
+    }
+
+    private Calendar getClosestValidDateFrom(Calendar datetime) {
         logger.debug("Right now is {}", datetime.toString());
         if (datetime.get(Calendar.MINUTE) < 15 || datetime.get(Calendar.MINUTE) > 45) {
             datetime.set(Calendar.MINUTE, 0);
