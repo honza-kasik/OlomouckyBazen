@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         dateTextView.setText(datetime.get(Calendar.DAY_OF_MONTH) + "." +
                 (datetime.get(Calendar.MONTH) + 1) + "." +
                 datetime.get(Calendar.YEAR));
+        currentlyDisplayedDate = datetime;
     }
 
     private Calendar getClosestValidDateFromNow() {

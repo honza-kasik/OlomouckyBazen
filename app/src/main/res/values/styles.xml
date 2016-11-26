@@ -20,7 +20,7 @@
     </style>
 
     <style name="SwimmingPoolActivity.ClockText">
-        <item name="android:textSize">100sp</item>
+        <item name="android:textSize">80sp</item>
         <item name="android:textColor">@color/swimmingPoolClockText</item>
         <item name="android:shadowColor">@color/swimmingPoolClockShadow</item>
         <item name="android:shadowDx">1</item>
