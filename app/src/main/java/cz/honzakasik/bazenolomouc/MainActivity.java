@@ -7,11 +7,18 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
@@ -23,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
     private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
 
     private SwimmingPoolView swimmingPoolView;
+
+    private TextView dateTextView;
+    private TextView clockTextView;
+
+    private Calendar currentlyDisplayedDate;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -40,20 +52,57 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         swimmingPoolView = (SwimmingPoolView) findViewById(R.id.swimming_pool);
+        ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
+        ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
+        dateTextView = (TextView) findViewById(R.id.swimming_pool_date);
+        clockTextView = (TextView) findViewById(R.id.swimming_pool_time);
+
+        arrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentlyDisplayedDate.add(Calendar.MINUTE, 30);
+                setSwimmingPoolViewForDate(currentlyDisplayedDate);
+            }
+        });
+
+        arrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentlyDisplayedDate.add(Calendar.MINUTE, -30);
+                setSwimmingPoolViewForDate(currentlyDisplayedDate);
+            }
+        });
+
+        currentlyDisplayedDate = getClosestValidDateFromNow();
+        setSwimmingPoolViewForDate(currentlyDisplayedDate);
+    }
+
+    private void setSwimmingPoolViewForDate(Calendar datetime) {
+        setTimeToDisplay(datetime);
 
         Intent poolProviderServiceIntent = new Intent(this, OlomoucPoolProviderService.class);
-        poolProviderServiceIntent.putExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, getDesiredDateAndTime());
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        poolProviderServiceIntent.putExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, datetime.getTime().getTime());
 
         logger.debug("Starting service!");
-        //startService(poolProviderServiceIntent);
+        startService(poolProviderServiceIntent);
+    }
 
+    private void setTimeToDisplay(Calendar datetime) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        clockTextView.setText(dateFormat.format(datetime.getTime()));
+        dateTextView.setText(datetime.get(Calendar.DAY_OF_MONTH) + "." + datetime.get(Calendar.MONTH) + "." + datetime.get(Calendar.YEAR));
+    }
 
+    private Calendar getClosestValidDateFromNow() {
+        Calendar datetime = Calendar.getInstance();
+        logger.debug("Right now is {}", datetime.toString());
+        if (datetime.get(Calendar.MINUTE) < 15 || datetime.get(Calendar.MINUTE) > 45) {
+            datetime.set(Calendar.MINUTE, 0);
+        } else {
+            datetime.set(Calendar.MINUTE, 30);
+        }
+        logger.debug("Closest valid time is {}", datetime.toString());
+        return datetime;
     }
 
     private long getDesiredDateAndTime() {

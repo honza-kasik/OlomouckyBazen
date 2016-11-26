@@ -22,8 +22,6 @@ public class OlomoucSwimmingPoolParser {
      * @param document document from which the {@link SwimmingPool} will be parsed
      */
     public OlomoucSwimmingPoolParser(Document document) {
-        /*Logger logger = LoggerFactory.getLogger(OlomoucSwimmingPoolParser.class);
-        logger.debug(document.outerHtml());*/
         this.document = document;
     }
 

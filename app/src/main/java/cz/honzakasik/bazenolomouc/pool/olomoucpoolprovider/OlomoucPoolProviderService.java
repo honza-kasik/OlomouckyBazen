@@ -80,7 +80,7 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         int minutes = time.get(Calendar.MINUTE);
 
         return URL.replaceAll(YEAR, String.valueOf(year))
-                .replaceAll(MONTH, String.valueOf(month))
+                .replaceAll(MONTH, String.valueOf(month + 1))
                 .replaceAll(DAY, String.valueOf(day))
                 .replaceAll(HOURS, String.valueOf(hours))
                 .replaceAll(MINUTES, String.valueOf(minutes));
