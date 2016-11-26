@@ -51,11 +51,6 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
 
-            if (swimmingPool == null) {
-                showErrorMessageInvalidDate();
-                return;
-            }
-
             swimmingPoolView.setSwimmingPool(swimmingPool);
 
             progressBar.setVisibility(View.INVISIBLE);
@@ -136,10 +131,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts service which downloads and parses swimming pool for passed datetime
+     * Starts service which downloads and parses swimming pool for passed datetime, it also makes a
+     * check if passed date is not behind current date
      * @param datetime date and time for which the swimming pool will be downloaded
      */
     private void setSwimmingPoolViewForDate(Calendar datetime) {
+        if (datetime.getTimeInMillis() < currentlyDisplayedDate.getTimeInMillis()) {
+            showErrorMessageInvalidDate();
+            logger.debug("Invalid date passed!");
+            return;
+        }
+
         setTimeToDisplay(datetime);
         progressBar.setVisibility(View.VISIBLE);
         swimmingPoolView.setVisibility(View.INVISIBLE);

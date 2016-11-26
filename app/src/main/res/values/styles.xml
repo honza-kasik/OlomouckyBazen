@@ -9,6 +9,10 @@
     </style>
 
     <style name="SwimmingPoolActivity" />
+
+    <style name="SwimmingPoolActivity.OccupancyLabel">
+        <item name="android:textAllCaps">true</item>
+    </style>
     
     <style name="SwimmingPoolActivity.Selector">
         <item name="android:background">#66bb6a</item>

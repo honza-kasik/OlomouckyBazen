@@ -25,7 +25,8 @@
             android:background="@drawable/arrow_left"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin" />
+            android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin"
+            android:contentDescription="@string/arrow_left_content_description" />
 
         <TextView
             android:text="11:30"
@@ -44,7 +45,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/arrow_right"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin" />
+            android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin"
+            android:contentDescription="@string/arrow_right_content_description" />
 
         <TextView
             android:text="25.11.2016"
@@ -59,11 +61,12 @@
 
 
     <TextView
+        style="@style/SwimmingPoolActivity.OccupancyLabel"
         android:padding="10dp"
         android:textColor="#fff"
         android:background="#424242"
         android:layout_width="match_parent"
-        android:text="OBSAZENÍ BAZÉNU"
+        android:text="@string/swimming_pool_occupation_label"
         android:elevation="5dp"
         android:layout_height="wrap_content" />
 

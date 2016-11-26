@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Bazen Olomouc</string>
     <string name="invalid_date_error_message">Invalid date!</string>
+    <string name="swimming_pool_occupation_label">Swimming pool occupation</string>
+    <string name="arrow_left_content_description">Show pool T-30 minutes</string>
+    <string name="arrow_right_content_description">Show pool T+30 minutes</string>
 </resources>
