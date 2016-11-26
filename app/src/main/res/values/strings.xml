@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Bazen Olomouc</string>
+    <string name="invalid_date_error_message">Invalid date!</string>
 </resources>

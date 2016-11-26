@@ -48,9 +48,14 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             logger.debug("Connecting to url: '{}'...", url);
             Connection connection = Jsoup.connect(url);
             Document doc = connection.get();
-            //logger.debug(doc.outerHtml());
-            SwimmingPool swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
-            logger.debug("Obtained '{}' swimming pool!", swimmingPool.getOrientation());
+
+            SwimmingPool swimmingPool = null;
+            try {
+                swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
+                logger.debug("Obtained '{}' swimming pool!", swimmingPool.getOrientation());
+            } catch (NoPoolParsedException e) {
+                logger.warn("No pool was found!");
+            }
 
             Intent dataIntent = new Intent();
             dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);

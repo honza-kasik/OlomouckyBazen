@@ -67,11 +67,26 @@
         android:elevation="5dp"
         android:layout_height="wrap_content" />
 
-    <cz.honzakasik.bazenolomouc.SwimmingPoolView
-        android:elevation="10dp"
-        android:id="@+id/swimming_pool"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <cz.honzakasik.bazenolomouc.SwimmingPoolView
+            android:visibility="invisible"
+            android:elevation="10dp"
+            android:id="@+id/swimming_pool"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/swimming_pool_progress_bar"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
 
 
 </LinearLayout>

@@ -3,8 +3,6 @@ package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 
@@ -28,11 +26,17 @@ public class OlomoucSwimmingPoolParser {
     /**
      * Parses swimming pool from document
      * @return parsed swimming pool
+     * @throws NoPoolParsedException if no pool was parsed!
      */
-    public SwimmingPool parseSwimmingPool() {
+    public SwimmingPool parseSwimmingPool() throws NoPoolParsedException {
         SwimmingPool.Builder builder = new SwimmingPool.Builder();
 
         Element poolElement = document.getElementById(SWIMMING_POOL_ELEMENT_ID);
+
+        if (poolElement == null) {
+            throw new NoPoolParsedException();
+        }
+
         Element innerPoolTable = poolElement.getElementsByTag(HTML_TABLE).get(0);
         SwimmingPool.TrackOrientation orientation = findSwimmingPoolOrientationFromInnerPoolTable(innerPoolTable);
 
