@@ -11,10 +11,15 @@ import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.View;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 
 @SuppressWarnings("SuspiciousNameCombination")
 public class SwimmingPoolView extends View {
+
+    private static final Logger logger = LoggerFactory.getLogger(SwimmingPool.class);
 
     private SwimmingPool swimmingPool = initTestSwimmmingPool();
 
@@ -65,13 +70,30 @@ public class SwimmingPoolView extends View {
             return;
         }
 
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), linePaint);
+        Rect rect = new Rect(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.drawRect(rect, linePaint);
 
-        if (swimmingPool.getOrientation() == SwimmingPool.TrackOrientation.HORIZONTAL) {
+        if (!swimmingPool.isOpen()) {
+            drawSwimmingPoolIsClosedMessage(canvas, rect);
+            logger.debug("Swimming pool is currently closed!");
+        } else if (swimmingPool.getOrientation() == SwimmingPool.TrackOrientation.HORIZONTAL) {
             drawHorizontalSwimmingPool(canvas);
         } else {
             drawVerticalSwimmingPool(canvas);
         }
+    }
+
+    private void drawSwimmingPoolIsClosedMessage(Canvas canvas, Rect rect) {
+        String text = getResources().getString(R.string.swimming_pool_is_closed_now);
+        //String text = "foobar dfgd reew ewrgrew";
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(ContextCompat.getColor(getContext(), R.color.swimmingPoolIsClosedText));
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTextSize(15 * getResources().getDisplayMetrics().density);
+
+        float textWidth = paint.measureText(text);
+        canvas.drawText(text, rect.exactCenterX() - (textWidth/2), rect.exactCenterY(), paint);
     }
 
     private Paint initNotAvailableForPublicPaint() {

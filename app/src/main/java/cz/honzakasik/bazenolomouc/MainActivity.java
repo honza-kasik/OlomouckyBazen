@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,12 +20,8 @@ import android.widget.Toast;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.regex.Pattern;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
@@ -76,16 +71,18 @@ public class MainActivity extends AppCompatActivity {
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentlyDisplayedDate.add(Calendar.MINUTE, 30);
-                setSwimmingPoolViewForDate(currentlyDisplayedDate);
+                Calendar newDate = (Calendar) currentlyDisplayedDate.clone();
+                newDate.add(Calendar.MINUTE, 30);
+                setSwimmingPoolViewForDate(newDate);
             }
         });
 
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentlyDisplayedDate.add(Calendar.MINUTE, -30);
-                setSwimmingPoolViewForDate(currentlyDisplayedDate);
+                Calendar newDate = (Calendar) currentlyDisplayedDate.clone();
+                newDate.add(Calendar.MINUTE, -30);
+                setSwimmingPoolViewForDate(newDate);
             }
         });
 
@@ -136,9 +133,8 @@ public class MainActivity extends AppCompatActivity {
      * @param datetime date and time for which the swimming pool will be downloaded
      */
     private void setSwimmingPoolViewForDate(Calendar datetime) {
-        if (datetime.getTimeInMillis() < currentlyDisplayedDate.getTimeInMillis()) {
+        if (!isTimeValid(datetime)) {
             showErrorMessageInvalidDate();
-            logger.debug("Invalid date passed!");
             return;
         }
 
@@ -170,6 +166,11 @@ public class MainActivity extends AppCompatActivity {
         return getClosestValidDateFrom(Calendar.getInstance());
     }
 
+    private boolean isTimeValid(Calendar datetime) {
+        long currentTime = getClosestValidDateFrom(Calendar.getInstance()).getTimeInMillis();
+        return datetime.getTimeInMillis() >= currentTime;
+    }
+
     private Calendar getClosestValidDateFrom(Calendar datetime) {
         logger.debug("Right now is {}", datetime.toString());
         if (datetime.get(Calendar.MINUTE) < 15 || datetime.get(Calendar.MINUTE) > 45) {
@@ -177,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             datetime.set(Calendar.MINUTE, 30);
         }
+        datetime.set(Calendar.SECOND, 0);
+        datetime.set(Calendar.MILLISECOND, 0);
         logger.debug("Closest valid time is {}", datetime.toString());
         return datetime;
     }

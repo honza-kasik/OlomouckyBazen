@@ -14,5 +14,6 @@
     <color name="swimmingPoolNotForPublicText">#b71c1c</color>
     <color name="swimmingPoolForPublic">#81c784</color>
     <color name="swimmingPoolForPublicText">#33691e</color>
+    <color name="swimmingPoolIsClosedText">#FFFFFF</color>
 
 </resources>
