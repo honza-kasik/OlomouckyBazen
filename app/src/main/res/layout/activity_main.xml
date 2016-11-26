@@ -12,30 +12,51 @@
     android:background="#bdbdbd"
     tools:context="cz.honzakasik.bazenolomouc.MainActivity">
 
+
     <RelativeLayout
-        android:orientation="vertical"
-        android:gravity="center"
         style="@style/SwimmingPoolActivity.Selector"
         android:layout_width="match_parent"
         android:layout_height="250dp">
 
+        <ImageButton
+            android:id="@+id/swimming_pool_arrow_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/arrow_left"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin" />
+
         <TextView
             android:text="11:30"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:id="@+id/swimming_pool_time"
             style="@style/SwimmingPoolActivity.ClockText"
-            android:layout_centerHorizontal="true"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <ImageButton
+            android:id="@+id/swimming_pool_arrow_right"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/arrow_right"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin" />
+
         <TextView
             android:text="25.11.2016"
-            android:layout_below="@id/swimming_pool_time"
             android:id="@+id/swimming_pool_date"
             style="@style/SwimmingPoolActivity.DateText"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/swimming_pool_time"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
+
 
     <TextView
         android:padding="10dp"

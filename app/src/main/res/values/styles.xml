@@ -16,15 +16,17 @@
     </style>
 
     <style name="SwimmingPoolActivity.ClockText">
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:textSize">90sp</item>
-        <item name="android:color">#ffffff</item>
+        <item name="android:textSize">100sp</item>
+        <item name="android:textColor">@color/swimmingPoolClockText</item>
+        <item name="android:shadowColor">@color/swimmingPoolClockShadow</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
 
     <style name="SwimmingPoolActivity.DateText">
-        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:color">#ffffff</item>
+        <item name="android:textColor">@color/swimmingPoolDateText</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 

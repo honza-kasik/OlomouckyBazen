@@ -66,6 +66,7 @@ public class SwimmingPoolView extends View {
         }
 
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), linePaint);
+
         if (swimmingPool.getOrientation() == SwimmingPool.TrackOrientation.HORIZONTAL) {
             drawHorizontalSwimmingPool(canvas);
         } else {
