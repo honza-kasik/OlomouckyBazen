@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
+import cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider.NoPoolParsedException;
 import cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider.OlomoucSwimmingPoolParser;
 
 public class OlomoucSwimmingPoolParserUnitTest {
@@ -68,7 +69,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
             "</table>";
 
     @Test
-    public void testParsingHorizontalPoolOrientation() {
+    public void testParsingHorizontalPoolOrientation() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -76,7 +77,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack0() {
+    public void testParsingHorizontalPoolTrack0() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -84,7 +85,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack1() {
+    public void testParsingHorizontalPoolTrack1() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -92,7 +93,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack2() {
+    public void testParsingHorizontalPoolTrack2() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -100,7 +101,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack3() {
+    public void testParsingHorizontalPoolTrack3() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -108,7 +109,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack4() {
+    public void testParsingHorizontalPoolTrack4() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -116,7 +117,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack5() {
+    public void testParsingHorizontalPoolTrack5() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -124,7 +125,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack6() {
+    public void testParsingHorizontalPoolTrack6() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -132,7 +133,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingHorizontalPoolTrack7() {
+    public void testParsingHorizontalPoolTrack7() throws NoPoolParsedException {
         Document document = Jsoup.parse(HORIZONTAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -140,7 +141,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolOrientation() {
+    public void testParsingVerticalPoolOrientation() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -148,7 +149,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrackCount() {
+    public void testParsingVerticalPoolTrackCount() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -156,7 +157,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack0() {
+    public void testParsingVerticalPoolTrack0() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -164,7 +165,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack1() {
+    public void testParsingVerticalPoolTrack1() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -172,7 +173,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack2() {
+    public void testParsingVerticalPoolTrack2() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -180,7 +181,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack3() {
+    public void testParsingVerticalPoolTrack3() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -188,7 +189,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack4() {
+    public void testParsingVerticalPoolTrack4() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -196,7 +197,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack5() {
+    public void testParsingVerticalPoolTrack5() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -204,7 +205,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack6() {
+    public void testParsingVerticalPoolTrack6() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 
@@ -212,7 +213,7 @@ public class OlomoucSwimmingPoolParserUnitTest {
     }
 
     @Test
-    public void testParsingVerticalPoolTrack7() {
+    public void testParsingVerticalPoolTrack7() throws NoPoolParsedException {
         Document document = Jsoup.parse(VERTICAL_SWIMMING_POOL_HTML);
         SwimmingPool pool = new OlomoucSwimmingPoolParser(document).parseSwimmingPool();
 

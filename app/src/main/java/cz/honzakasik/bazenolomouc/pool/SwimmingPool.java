@@ -14,10 +14,12 @@ public class SwimmingPool implements Parcelable {
 
     private List<Track> tracks;
     private TrackOrientation orientation;
+    private boolean isOpen;
 
     private SwimmingPool(Builder builder) {
         this.tracks = builder.tracks;
         this.orientation = builder.orientation;
+        this.isOpen = builder.isOpen;
     }
 
     public List<Track> getTracks() {
@@ -26,6 +28,10 @@ public class SwimmingPool implements Parcelable {
 
     public TrackOrientation getOrientation() {
         return orientation;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
     }
 
     /**
@@ -63,6 +69,7 @@ public class SwimmingPool implements Parcelable {
 
         private List<Track> tracks;
         private TrackOrientation orientation;
+        private boolean isOpen;
 
         public Builder() {
             this.orientation = TrackOrientation.HORIZONTAL;
@@ -83,6 +90,11 @@ public class SwimmingPool implements Parcelable {
                 this.tracks = new LinkedList<>();
             }
             this.tracks.add(track);
+            return this;
+        }
+
+        public Builder open() {
+            this.isOpen = true;
             return this;
         }
 

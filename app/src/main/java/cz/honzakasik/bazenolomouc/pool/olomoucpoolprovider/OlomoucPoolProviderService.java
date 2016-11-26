@@ -3,8 +3,11 @@ package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -18,8 +21,9 @@ import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
 
 public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OlomoucPoolProviderService.class);
+
     private static final String
-            ACTION_DONE = "DOWNLOAD_DONE",
             URL = "http://www.olterm.cz/plavecky-bazen/rozpis-plavani?den={DAY}&mesic={MONTH}&rok={YEAR}&hodina={HOURS}&minuta={MINUTES}",
             DAY = Pattern.quote("{DAY}"),
             MONTH = Pattern.quote("{MONTH}"),
@@ -27,6 +31,9 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             HOURS = Pattern.quote("{HOURS}"),
             MINUTES = Pattern.quote("{MINUTES}");
 
+    public OlomoucPoolProviderService() {
+        this("");
+    }
 
     public OlomoucPoolProviderService(String name) {
         super("Olomouc pool provider service");
@@ -34,15 +41,27 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        logger.debug("Started onHandleIntent");
         long datetime = intent.getLongExtra(DATETIME_EXTRA_IDENTIFIER, -1);
         try {
-            Document doc = Jsoup.connect(parseURLForDatetime(new Date(datetime))).get();
-            SwimmingPool swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
+            String url = parseURLForDatetime(new Date(datetime));
+            logger.debug("Connecting to url: '{}'...", url);
+            Connection connection = Jsoup.connect(url);
+            Document doc = connection.get();
+
+            SwimmingPool swimmingPool = null;
+            try {
+                swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
+                logger.debug("Obtained '{}' swimming pool!", swimmingPool.getOrientation());
+            } catch (NoPoolParsedException e) {
+                logger.warn("No pool was found!");
+            }
 
             Intent dataIntent = new Intent();
             dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);
             dataIntent.setAction(ACTION_DONE);
             LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
+            logger.debug("Broadcast sent!");
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -66,7 +85,7 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         int minutes = time.get(Calendar.MINUTE);
 
         return URL.replaceAll(YEAR, String.valueOf(year))
-                .replaceAll(MONTH, String.valueOf(month))
+                .replaceAll(MONTH, String.valueOf(month + 1))
                 .replaceAll(DAY, String.valueOf(day))
                 .replaceAll(HOURS, String.valueOf(hours))
                 .replaceAll(MINUTES, String.valueOf(minutes));

@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Bazen Olomouc</string>
+    <string name="app_name">Swimming Pool Olomouc</string>
+    <string name="app_description">Application showing occupancy and current temperature in Olomouc swimming pool. This app is not official!</string>
+    <string name="app_credits">Author: Honza Kašík – honzakasik.cz. If you run into any problems fill an issue on GitHub.</string>
+
+    <string name="invalid_date_error_message">Invalid date!</string>
+    <string name="swimming_pool_occupation_label">Swimming pool occupation</string>
+    <string name="arrow_left_content_description">Show pool T-30 minutes</string>
+    <string name="arrow_right_content_description">Show pool T+30 minutes</string>
+    <string name="swimming_pool_is_closed_now">Swimming pool is closed right now!</string>
+    <string name="about_application">About</string>
 </resources>

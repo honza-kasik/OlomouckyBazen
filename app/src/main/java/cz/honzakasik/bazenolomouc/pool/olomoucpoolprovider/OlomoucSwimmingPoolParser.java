@@ -3,10 +3,14 @@ package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 
 public class OlomoucSwimmingPoolParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(OlomoucSwimmingPoolParser.class);
 
     private static final String
             SWIMMING_POOL_ELEMENT_ID = "bazen",
@@ -26,19 +30,29 @@ public class OlomoucSwimmingPoolParser {
     /**
      * Parses swimming pool from document
      * @return parsed swimming pool
+     * @throws NoPoolParsedException if no pool was parsed!
      */
-    public SwimmingPool parseSwimmingPool() {
-        SwimmingPool.Builder builder = new SwimmingPool.Builder();
-
+    public SwimmingPool parseSwimmingPool() throws NoPoolParsedException {
         Element poolElement = document.getElementById(SWIMMING_POOL_ELEMENT_ID);
-        Element innerPoolTable = poolElement.getElementsByTag(HTML_TABLE).get(0);
-        SwimmingPool.TrackOrientation orientation = findSwimmingPoolOrientationFromInnerPoolTable(innerPoolTable);
 
-        builder.orientation(orientation);
+        if (poolElement == null) {
+            throw new NoPoolParsedException();
+        }
 
-        for (Element track : getPoolTrackElements(innerPoolTable)) {
-            boolean isForPublic = isTrackAvailableIsForPublicByImageElement(track);
-            builder.track(new SwimmingPool.Track(isForPublic));
+        logger.debug(poolElement.outerHtml());
+
+        SwimmingPool.Builder builder = new SwimmingPool.Builder();
+        if (findIfPoolIsOpen(poolElement)) {
+            builder.open();
+            Element innerPoolTable = poolElement.getElementsByTag(HTML_TABLE).get(0);
+            SwimmingPool.TrackOrientation orientation = findSwimmingPoolOrientationFromInnerPoolTable(innerPoolTable);
+
+            builder.orientation(orientation);
+
+            for (Element track : getPoolTrackElements(innerPoolTable)) {
+                boolean isForPublic = isTrackAvailableIsForPublicByImageElement(track);
+                builder.track(new SwimmingPool.Track(isForPublic));
+            }
         }
 
         return builder.build();
@@ -58,5 +72,9 @@ public class OlomoucSwimmingPoolParser {
 
     private Elements getPoolTrackElements(Element poolElement) {
         return poolElement.select("img[src~=[kd]\\dx?\\.gif]");
+    }
+
+    private boolean findIfPoolIsOpen(Element poolElement) {
+        return poolElement.select("img[src=/mdl_bazen/images/pracovnidoba.jpg]").size() == 0;
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,10 +8,88 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="#bdbdbd"
     tools:context="cz.honzakasik.bazenolomouc.MainActivity">
 
+
+    <RelativeLayout
+        style="@style/SwimmingPoolActivity.Selector"
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
+        <ImageButton
+            android:id="@+id/swimming_pool_arrow_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/arrow_left"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin"
+            android:contentDescription="@string/arrow_left_content_description" />
+
+        <TextView
+            android:text="11:30"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/swimming_pool_time"
+            style="@style/SwimmingPoolActivity.ClockText"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/swimming_pool_arrow_right"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/arrow_right"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin"
+            android:contentDescription="@string/arrow_right_content_description" />
+
+        <TextView
+            android:text="25.11.2016"
+            android:id="@+id/swimming_pool_date"
+            style="@style/SwimmingPoolActivity.DateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/swimming_pool_time"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+        style="@style/SwimmingPoolActivity.OccupancyLabel"
+        android:padding="10dp"
+        android:textColor="#fff"
+        android:background="#424242"
+        android:layout_width="match_parent"
+        android:text="@string/swimming_pool_occupation_label"
+        android:elevation="5dp"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cz.honzakasik.bazenolomouc.SwimmingPoolView
+            android:visibility="invisible"
+            android:elevation="10dp"
+            android:id="@+id/swimming_pool"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/swimming_pool_progress_bar"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
