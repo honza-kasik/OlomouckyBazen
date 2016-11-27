@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
-import cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider.NoPoolParsedException;
-import cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider.OlomoucSwimmingPoolParser;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider.NoPoolParsedException;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider.OlomoucSwimmingPoolParser;
 
 public class OlomoucSwimmingPoolParserUnitTest {
 

@@ -1,4 +1,4 @@
-package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
+package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 /**
  * This exception is thrown when no pool was parsed

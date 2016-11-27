@@ -1,10 +1,9 @@
-package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
+package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.anupcowkur.reservoir.Reservoir;
-import com.anupcowkur.reservoir.ReservoirGetCallback;
 import com.anupcowkur.reservoir.ReservoirPutCallback;
 
 import org.jsoup.Connection;
@@ -53,12 +52,18 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         try {
             if (Reservoir.contains(dateKey)) {
                 logger.debug("Cache hit! Pool found!");
-                sendSwimmingPoolAsBroadcast(Reservoir.get(dateKey, SwimmingPool.class));
+                SwimmingPool swimmingPool = null;
+                try {
+                    swimmingPool = Reservoir.get(dateKey, SwimmingPool.class);
+                } catch (NullPointerException e) {
+                    logger.error("Cached value for key '{}' is null!", dateKey);
+                }
+                sendSwimmingPoolAsBroadcast(swimmingPool);
             } else {
                 logger.debug("Cache miss!");
                 SwimmingPool swimmingPool = downloadAndParseSwimmingPool(date);
                 sendSwimmingPoolAsBroadcast(swimmingPool);
-                saveToCache(date, swimmingPool);
+                saveToCacheIfNotNull(date, swimmingPool);
             }
         } catch (IOException e) {
             logger.error("Error when checking cache for key '{}'", dateKey, e);
@@ -108,7 +113,10 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 .replaceAll(MINUTES, String.valueOf(minutes));
     }
 
-    private void saveToCache(Date date, SwimmingPool swimmingPool) {
+    private void saveToCacheIfNotNull(Date date, SwimmingPool swimmingPool) {
+        if (swimmingPool == null) {
+            return;
+        }
         Reservoir.putAsync(String.valueOf(date.getTime()), swimmingPool, new ReservoirPutCallback() {
             @Override
             public void onSuccess() {
