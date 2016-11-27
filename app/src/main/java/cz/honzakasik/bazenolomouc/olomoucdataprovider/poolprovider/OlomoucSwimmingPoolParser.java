@@ -1,4 +1,4 @@
-package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
+package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

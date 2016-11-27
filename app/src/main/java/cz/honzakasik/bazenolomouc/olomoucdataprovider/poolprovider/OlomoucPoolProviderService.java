@@ -1,10 +1,9 @@
-package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
+package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.anupcowkur.reservoir.Reservoir;
-import com.anupcowkur.reservoir.ReservoirGetCallback;
 import com.anupcowkur.reservoir.ReservoirPutCallback;
 
 import org.jsoup.Connection;

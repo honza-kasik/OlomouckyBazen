@@ -29,7 +29,7 @@ import java.util.Calendar;
 
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
-import cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider.OlomoucPoolProviderService;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider.OlomoucPoolProviderService;
 
 public class MainActivity extends AppCompatActivity {
 

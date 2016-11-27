@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".pool.olomoucpoolprovider.OlomoucPoolProviderService" />
+        <service android:name=".olomoucdataprovider.poolprovider.OlomoucPoolProviderService" />
     </application>
 
 </manifest>
