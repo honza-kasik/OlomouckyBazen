@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -39,14 +38,11 @@ public class MainActivity extends AppCompatActivity {
     private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
 
     private SwimmingPoolView swimmingPoolView;
-
     private ProgressBar progressBar;
 
-    private TextView dateTextView;
-    private TextView clockTextView;
     private TextView occupancyTextView;
 
-    private Calendar currentlyDisplayedDate;
+    private TimeDisplay timeDisplay;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -80,46 +76,46 @@ public class MainActivity extends AppCompatActivity {
 
         swimmingPoolView = (SwimmingPoolView) findViewById(R.id.swimming_pool);
         progressBar = (ProgressBar) findViewById(R.id.swimming_pool_progress_bar);
-        ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
-        ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
-        dateTextView = (TextView) findViewById(R.id.swimming_pool_date);
-        clockTextView = (TextView) findViewById(R.id.swimming_pool_time);
         occupancyTextView = (TextView) findViewById(R.id.occupancy_text_view);
 
+        ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar newDate = (Calendar) currentlyDisplayedDate.clone();
-                newDate.add(Calendar.MINUTE, 30);
-                setSwimmingPoolViewForDate(newDate);
+                addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(30);
             }
         });
 
+        ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar newDate = (Calendar) currentlyDisplayedDate.clone();
-                newDate.add(Calendar.MINUTE, -30);
-                setSwimmingPoolViewForDate(newDate);
+                addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(-30);
             }
         });
 
+        //opens a time picker when clicked on time
+        TextView clockTextView = (TextView) findViewById(R.id.swimming_pool_time);
         clockTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Calendar newTime = (Calendar) currentlyDisplayedDate.clone();
+                        Calendar newTime = timeDisplay.getCurrentlyDisplayedDate();
                         newTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         newTime.set(Calendar.MINUTE, minute);
-                        setSwimmingPoolViewForDate(getClosestValidDateFrom(newTime));
+                        setNewTimeAndUpdateSwimmingPoolIfIsValid(newTime);
                     }
-                }, currentlyDisplayedDate.get(Calendar.HOUR_OF_DAY), currentlyDisplayedDate.get(Calendar.MINUTE), true);
+                }, timeDisplay.getCurrentlyDisplayedDate().get(Calendar.HOUR_OF_DAY),
+                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.MINUTE),
+                        true);
                 dialog.show();
             }
         });
 
+        //opens a date picker when clicked on date
+        TextView dateTextView = (TextView) findViewById(R.id.swimming_pool_date);
         dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,19 +123,24 @@ public class MainActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                Calendar newDate = (Calendar) currentlyDisplayedDate.clone();
+                                Calendar newDate = timeDisplay.getCurrentlyDisplayedDate();
                                 newDate.set(Calendar.YEAR, year);
                                 newDate.set(Calendar.MONTH, month);
                                 newDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                setSwimmingPoolViewForDate(newDate);
+                                updateSwimmingPoolViewForDate(newDate);
                             }
                         },
-                        currentlyDisplayedDate.get(Calendar.YEAR),
-                        currentlyDisplayedDate.get(Calendar.MONTH),
-                        currentlyDisplayedDate.get(Calendar.DAY_OF_MONTH));
+                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.YEAR),
+                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.MONTH),
+                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
             }
         });
+
+        timeDisplay = new TimeDisplay.Builder()
+                .clockTextView(clockTextView)
+                .dateTextView(dateTextView)
+                .build();
 
         occupancyTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,23 +149,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        currentlyDisplayedDate = getClosestValidDateFromNow();
-        setSwimmingPoolViewForDate(currentlyDisplayedDate);
+        updateSwimmingPoolViewForDate(timeDisplay.getCurrentlyDisplayedDate());
+        timeDisplay.setTimeToDisplay(timeDisplay.getCurrentlyDisplayedDate());
         updateOccupancy();
     }
 
     /**
-     * Starts service which downloads and parses swimming pool for passed datetime, it also makes a
-     * check if passed date is not behind current date
+     * Adds amount of minutes (even negative value) to currently displayed time and updates both
+     * time display and swimming pool view
+     * @param minutes amount of minutes to add
+     */
+    private void addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(int minutes) {
+        Calendar newDate = timeDisplay.addMinutesToCurrentlyDisplayedDate(minutes);
+        setNewTimeAndUpdateSwimmingPoolIfIsValid(newDate);
+    }
+
+    /**
+     * Sets new time to time display and updates swimming pool view accordingly.
+     * @param newTime time to set
+     */
+    private void setNewTimeAndUpdateSwimmingPoolIfIsValid(Calendar newTime) {
+        if (timeDisplay.isTimeValid(newTime)) {
+            timeDisplay.setTimeToDisplay(newTime);
+            updateSwimmingPoolViewForDate(timeDisplay.getClosestValidDateFrom(newTime));
+        } else {
+            showErrorMessageInvalidDate();
+        }
+    }
+
+    /**
+     * Starts service which downloads and parses swimming pool for passed datetime. Updating date
+     * itself is responsibility of broadcast receiver.
      * @param datetime date and time for which the swimming pool will be downloaded
      */
-    private void setSwimmingPoolViewForDate(Calendar datetime) {
-        if (!isTimeValid(datetime)) {
-            showErrorMessageInvalidDate();
-            return;
-        }
-
-        setTimeToDisplay(datetime);
+    private void updateSwimmingPoolViewForDate(Calendar datetime) {
         progressBar.setVisibility(View.VISIBLE);
         swimmingPoolView.setVisibility(View.INVISIBLE);
 
@@ -175,40 +193,7 @@ public class MainActivity extends AppCompatActivity {
         startService(poolProviderServiceIntent);
     }
 
-    /**
-     * Sets time and date to display
-     * @param datetime this will be set
-     */
-    private void setTimeToDisplay(Calendar datetime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        clockTextView.setText(dateFormat.format(datetime.getTime()));
-        dateTextView.setText(datetime.get(Calendar.DAY_OF_MONTH) + "." +
-                (datetime.get(Calendar.MONTH) + 1) + "." +
-                datetime.get(Calendar.YEAR));
-        currentlyDisplayedDate = datetime;
-    }
 
-    private Calendar getClosestValidDateFromNow() {
-        return getClosestValidDateFrom(Calendar.getInstance());
-    }
-
-    private boolean isTimeValid(Calendar datetime) {
-        long currentTime = getClosestValidDateFrom(Calendar.getInstance()).getTimeInMillis();
-        return datetime.getTimeInMillis() >= currentTime;
-    }
-
-    private Calendar getClosestValidDateFrom(Calendar datetime) {
-        logger.debug("Right now is {}", datetime.toString());
-        if (datetime.get(Calendar.MINUTE) < 15 || datetime.get(Calendar.MINUTE) > 45) {
-            datetime.set(Calendar.MINUTE, 0);
-        } else {
-            datetime.set(Calendar.MINUTE, 30);
-        }
-        datetime.set(Calendar.SECOND, 0);
-        datetime.set(Calendar.MILLISECOND, 0);
-        logger.debug("Closest valid time is {}", datetime.toString());
-        return datetime;
-    }
 
     @Override
     protected void onResume() {
@@ -232,11 +217,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showErrorMessageInvalidDate() {
-        Toast.makeText(this, getResources().getString(R.string.invalid_date_error_message),
-                Toast.LENGTH_LONG).show();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -252,20 +232,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateOccupancy() {
-        Intent intent = new Intent(this, OlomoucOccupancyProviderService.class);
-        startService(intent);
-        logger.debug("Started occupancy provider service!");
-    }
-
-    private void updateOccupancyLabel(int occupancy) {
-        String text = getResources().getString(R.string.pool_occupancy);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
-    }
-
-    protected void showAbout() {
+    /**
+     * Shows dialog with information about application
+     */
+    private void showAbout() {
         logger.debug("Opening about dialog.");
         View messageView = getLayoutInflater().inflate(R.layout.dialog_about, null, false);
 
@@ -278,6 +248,34 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(messageView);
         builder.create();
         builder.show();
+    }
+
+    /**
+     * Retrieves new information from server about occupancy
+     */
+    private void updateOccupancy() {
+        Intent intent = new Intent(this, OlomoucOccupancyProviderService.class);
+        startService(intent);
+        logger.debug("Started occupancy provider service!");
+    }
+
+    /**
+     * Updates occupancy label with new value
+     * @param occupancy new value
+     */
+    private void updateOccupancyLabel(int occupancy) {
+        String text = getResources().getString(R.string.pool_occupancy);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
+    }
+
+    /**
+     * Shows error message as toast
+     */
+    private void showErrorMessageInvalidDate() {
+        Toast.makeText(this, getResources().getString(R.string.invalid_date_error_message),
+                Toast.LENGTH_LONG).show();
     }
 
 }
