@@ -141,6 +141,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        occupancyTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateOccupancy();
+            }
+        });
+
         currentlyDisplayedDate = getClosestValidDateFromNow();
         setSwimmingPoolViewForDate(currentlyDisplayedDate);
         updateOccupancy();
