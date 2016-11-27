@@ -3,6 +3,10 @@ package cz.honzakasik.bazenolomouc.pool.olomoucpoolprovider;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.anupcowkur.reservoir.Reservoir;
+import com.anupcowkur.reservoir.ReservoirGetCallback;
+import com.anupcowkur.reservoir.ReservoirPutCallback;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,10 +46,29 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
     @Override
     protected void onHandleIntent(Intent intent) {
         logger.debug("Started onHandleIntent");
-        long datetime = intent.getLongExtra(DATETIME_EXTRA_IDENTIFIER, -1);
+        final long datetime = intent.getLongExtra(DATETIME_EXTRA_IDENTIFIER, -1);
+        final Date date = new Date(datetime);
+        final String dateKey = String.valueOf(datetime);
+
         try {
-            String url = parseURLForDatetime(new Date(datetime));
-            logger.debug("Connecting to url: '{}'...", url);
+            if (Reservoir.contains(dateKey)) {
+                logger.debug("Cache hit! Pool found!");
+                sendSwimmingPoolAsBroadcast(Reservoir.get(dateKey, SwimmingPool.class));
+            } else {
+                logger.debug("Cache miss!");
+                SwimmingPool swimmingPool = downloadAndParseSwimmingPool(date);
+                sendSwimmingPoolAsBroadcast(swimmingPool);
+                saveToCache(date, swimmingPool);
+            }
+        } catch (IOException e) {
+            logger.error("Error when checking cache for key '{}'", dateKey, e);
+        }
+    }
+
+    private SwimmingPool downloadAndParseSwimmingPool(Date datetime) {
+        try {
+            String url = parseURLForDatetime(datetime);
+            logger.debug("Connecting to url: '{}'", url);
             Connection connection = Jsoup.connect(url);
             Document doc = connection.get();
 
@@ -56,22 +79,16 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             } catch (NoPoolParsedException e) {
                 logger.warn("No pool was found!");
             }
-
-            Intent dataIntent = new Intent();
-            dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);
-            dataIntent.setAction(ACTION_DONE);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
-            logger.debug("Broadcast sent!");
+            return swimmingPool;
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            //TODO
+            logger.error("Error during URL creation!", e);
         } catch (IOException e) {
-            e.printStackTrace();
-            //TODO
+            logger.error("Could not connect!", e);
         }
+        return null;
     }
 
     private String parseURLForDatetime(Date date) throws MalformedURLException {
@@ -91,5 +108,25 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 .replaceAll(MINUTES, String.valueOf(minutes));
     }
 
+    private void saveToCache(Date date, SwimmingPool swimmingPool) {
+        Reservoir.putAsync(String.valueOf(date.getTime()), swimmingPool, new ReservoirPutCallback() {
+            @Override
+            public void onSuccess() {
+                logger.debug("Successfully saved to cache!");
+            }
 
+            @Override
+            public void onFailure(Exception e) {
+                logger.error("Failure when saving to cache", e);
+            }
+        });
+    }
+
+    private void sendSwimmingPoolAsBroadcast(SwimmingPool swimmingPool) {
+        Intent dataIntent = new Intent();
+        dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);
+        dataIntent.setAction(ACTION_DONE);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
+        logger.debug("Broadcast sent!");
+    }
 }
