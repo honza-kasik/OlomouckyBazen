@@ -12,6 +12,7 @@
 
     <style name="SwimmingPoolActivity.OccupancyLabel">
         <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">#FFFFFF  </item>
     </style>
     
     <style name="SwimmingPoolActivity.Selector">

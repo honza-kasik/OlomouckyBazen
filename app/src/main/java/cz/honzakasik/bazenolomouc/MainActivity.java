@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.occupancy.OlomoucOccupancyProviderService;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider.OlomoucPoolProviderService;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView dateTextView;
     private TextView clockTextView;
+    private TextView occupancyTextView;
 
     private Calendar currentlyDisplayedDate;
 
@@ -48,15 +52,24 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
+            logger.debug("Broadcast received!");
 
-            swimmingPoolView.setSwimmingPool(swimmingPool);
+            String action = intent.getAction();
+            if (action.equals(SwimmingPoolProviderService.ACTION_DONE)) {
+                logger.debug("Swimming pool broadcast recieved");
+                SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
 
-            progressBar.setVisibility(View.INVISIBLE);
-            swimmingPoolView.setVisibility(View.VISIBLE);
+                swimmingPoolView.setSwimmingPool(swimmingPool);
 
-            swimmingPoolView.invalidate();
-            logger.info("Broadcast received!");
+                progressBar.setVisibility(View.INVISIBLE);
+                swimmingPoolView.setVisibility(View.VISIBLE);
+
+                swimmingPoolView.invalidate();
+            } else if (action.equals(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED)) {
+                int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
+                logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
+                updateOccupancyLabel(occupancy);
+            }
         }
     };
 
@@ -71,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
         dateTextView = (TextView) findViewById(R.id.swimming_pool_date);
         clockTextView = (TextView) findViewById(R.id.swimming_pool_time);
+        occupancyTextView = (TextView) findViewById(R.id.occupancy_text_view);
 
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         currentlyDisplayedDate = getClosestValidDateFromNow();
         setSwimmingPoolViewForDate(currentlyDisplayedDate);
+        updateOccupancy();
     }
 
     /**
@@ -193,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SwimmingPoolProviderService.ACTION_DONE);
+        intentFilter.addAction(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
     }
 
@@ -221,24 +237,36 @@ public class MainActivity extends AppCompatActivity {
                 logger.debug("Selected about option.");
                 showAbout();
                 return true;
+            case R.id.update_menu_item:
+                logger.debug("Selected update option.");
+                updateOccupancy();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void updateOccupancy() {
+        Intent intent = new Intent(this, OlomoucOccupancyProviderService.class);
+        startService(intent);
+        logger.debug("Started occupancy provider service!");
+    }
+
+    private void updateOccupancyLabel(int occupancy) {
+        String text = getResources().getString(R.string.pool_occupancy);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
+    }
+
     protected void showAbout() {
         logger.debug("Opening about dialog.");
-        // Inflate the about message contents
         View messageView = getLayoutInflater().inflate(R.layout.dialog_about, null, false);
 
-        // When linking text, force to always use default color. This works
-        // around a pressed color state bug.
         TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
         int defaultColor = textView.getTextColors().getDefaultColor();
         textView.setTextColor(defaultColor);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //builder.setIcon(R.drawable.app_icon);
         builder.setTitle(R.string.app_name);
         builder.setView(messageView);
         builder.create();

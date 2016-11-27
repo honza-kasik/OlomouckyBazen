@@ -60,15 +60,29 @@
     </RelativeLayout>
 
 
-    <TextView
-        style="@style/SwimmingPoolActivity.OccupancyLabel"
-        android:padding="10dp"
-        android:textColor="#fff"
+    <RelativeLayout
         android:background="#424242"
-        android:layout_width="match_parent"
-        android:text="@string/swimming_pool_occupation_label"
+        android:padding="10dp"
         android:elevation="5dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/SwimmingPoolActivity.OccupancyLabel"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:text="@string/swimming_pool_occupation_label"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/SwimmingPoolActivity.OccupancyLabel"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/occupancy_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

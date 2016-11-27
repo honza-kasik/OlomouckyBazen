@@ -20,6 +20,7 @@
         </activity>
 
         <service android:name=".olomoucdataprovider.poolprovider.OlomoucPoolProviderService" />
+        <service android:name=".olomoucdataprovider.occupancy.OlomoucOccupancyProviderService" />
     </application>
 
 </manifest>
