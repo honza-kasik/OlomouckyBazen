@@ -11,10 +11,18 @@
     <style name="SwimmingPoolActivity" />
 
     <style name="SwimmingPoolActivity.OccupancyLabel">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">#FFFFFF  </item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
-    
+
+    <style name="SwimmingPoolActivity.OccupancyLabel.Headline">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.OccupancyLabel.Occupancy">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+
     <style name="SwimmingPoolActivity.Selector">
         <item name="android:background">#66bb6a</item>
         <item name="android:elevation">3dp</item>
