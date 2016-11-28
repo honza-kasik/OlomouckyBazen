@@ -94,6 +94,22 @@ public class TimeDisplay {
         return datetime;
     }
 
+    /**
+     * Find out if invalid time is displayed
+     * @return true if closest valid time is grater than displayed, false itherwise
+     */
+    public boolean isDisplayedValidTime() {
+        return isTimeValid(currentlyDisplayedDate);
+    }
+
+    /**
+     * Find out if closest valid time is displayed
+     * @return true if closest valid time is displayed, false otherwise
+     */
+    public boolean isDisplayedClosestValidTime() {
+        return getClosestValidDateFromNow().getTime().equals(currentlyDisplayedDate.getTime());
+    }
+
     public static final class Builder {
 
         private TextView dateTextView;

@@ -96,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(-30);
-                if (timeDisplay.getCurrentlyDisplayedDate().getTimeInMillis() ==
-                        timeDisplay.getClosestValidDateFromNow().getTimeInMillis()) {
+                if (timeDisplay.isDisplayedClosestValidTime()) {
                     //next is invalid time
                     arrowLeft.setClickable(false);
                     arrowLeft.setEnabled(false);
@@ -196,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             timeDisplay.setTimeToDisplay(newTime);
             updateSwimmingPoolViewForDate(timeDisplay.getClosestValidDateFrom(newTime));
         } else {
-            if (timeDisplay.getCurrentlyDisplayedDate().getTimeInMillis() < newTime.getTimeInMillis()) {
+            if (!timeDisplay.isDisplayedValidTime()) {
                 Calendar closestValid = timeDisplay.getClosestValidDateFromNow();
                 timeDisplay.setTimeToDisplay(closestValid);
                 updateSwimmingPoolViewForDate(timeDisplay.getClosestValidDateFrom(closestValid));
