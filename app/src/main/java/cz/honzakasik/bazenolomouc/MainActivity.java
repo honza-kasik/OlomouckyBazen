@@ -78,19 +78,30 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.swimming_pool_progress_bar);
         occupancyTextView = (TextView) findViewById(R.id.occupancy_text_view);
 
-        ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
+        final ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
+        final ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
+
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(30);
+                arrowLeft.setEnabled(true);
+                arrowLeft.setClickable(true);
             }
         });
 
-        ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
+        arrowLeft.setClickable(false);
+        arrowLeft.setEnabled(false);
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(-30);
+                if (timeDisplay.getCurrentlyDisplayedDate().getTimeInMillis() ==
+                        timeDisplay.getClosestValidDateFromNow().getTimeInMillis()) {
+                    //next is invalid time
+                    arrowLeft.setClickable(false);
+                    arrowLeft.setEnabled(false);
+                }
             }
         });
 
@@ -156,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
                 //Load nearest time
                 updateOccupancy();
                 setNewTimeAndUpdateSwimmingPoolIfIsValid(timeDisplay.getClosestValidDateFromNow());
+                arrowLeft.setClickable(false);
+                arrowLeft.setEnabled(false);
             }
         });
 
@@ -183,7 +196,13 @@ public class MainActivity extends AppCompatActivity {
             timeDisplay.setTimeToDisplay(newTime);
             updateSwimmingPoolViewForDate(timeDisplay.getClosestValidDateFrom(newTime));
         } else {
-            showErrorMessageInvalidDate();
+            if (timeDisplay.getCurrentlyDisplayedDate().getTimeInMillis() < newTime.getTimeInMillis()) {
+                Calendar closestValid = timeDisplay.getClosestValidDateFromNow();
+                timeDisplay.setTimeToDisplay(closestValid);
+                updateSwimmingPoolViewForDate(timeDisplay.getClosestValidDateFrom(closestValid));
+            } else {
+                showErrorMessageInvalidDate();
+            }
         }
     }
 
