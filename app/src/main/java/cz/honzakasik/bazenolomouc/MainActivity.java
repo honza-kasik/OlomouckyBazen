@@ -149,6 +149,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ImageButton refreshButton = (ImageButton) findViewById(R.id.swimming_pool_clock_refresh_button);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Load nearest time
+                updateOccupancy();
+                setNewTimeAndUpdateSwimmingPoolIfIsValid(timeDisplay.getClosestValidDateFromNow());
+            }
+        });
+
         updateSwimmingPoolViewForDate(timeDisplay.getCurrentlyDisplayedDate());
         timeDisplay.setTimeToDisplay(timeDisplay.getCurrentlyDisplayedDate());
         updateOccupancy();

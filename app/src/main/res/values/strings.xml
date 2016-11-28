@@ -7,6 +7,7 @@
     <string name="swimming_pool_occupation_label">Swimming pool occupation</string>
     <string name="arrow_left_content_description">Show pool T-30 minutes</string>
     <string name="arrow_right_content_description">Show pool T+30 minutes</string>
+    <string name="refresh_button_content_description">Refresh occupancy data and reset to closest time</string>
     <string name="swimming_pool_is_closed_now">Swimming pool is closed right now!</string>
     <string name="about_application">About</string>
     <string name="update_data">Update</string>
