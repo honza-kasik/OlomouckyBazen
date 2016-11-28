@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView occupancyTextView;
 
-    private TimeDisplay timeDisplay;
+    private DatetimeDisplay datetimeDisplay;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -78,19 +78,29 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.swimming_pool_progress_bar);
         occupancyTextView = (TextView) findViewById(R.id.occupancy_text_view);
 
-        ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
+        final ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
+        final ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
+
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(30);
+                addMinutesAndUpdateSwimmingPoolIfNewDatetimeIsValid(30);
+                arrowLeft.setEnabled(true);
+                arrowLeft.setClickable(true);
             }
         });
 
-        ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
+        arrowLeft.setClickable(false);
+        arrowLeft.setEnabled(false);
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(-30);
+                addMinutesAndUpdateSwimmingPoolIfNewDatetimeIsValid(-30);
+                if (datetimeDisplay.isDisplayedClosestValidTime()) {
+                    //next is invalid time
+                    arrowLeft.setClickable(false);
+                    arrowLeft.setEnabled(false);
+                }
             }
         });
 
@@ -102,13 +112,13 @@ public class MainActivity extends AppCompatActivity {
                 TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Calendar newTime = timeDisplay.getCurrentlyDisplayedDate();
+                        Calendar newTime = datetimeDisplay.getCurrentlyDisplayedDate();
                         newTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         newTime.set(Calendar.MINUTE, minute);
-                        setNewTimeAndUpdateSwimmingPoolIfIsValid(newTime);
+                        setNewDatetimeAndUpdateSwimmingPoolIfIsValid(newTime);
                     }
-                }, timeDisplay.getCurrentlyDisplayedDate().get(Calendar.HOUR_OF_DAY),
-                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.MINUTE),
+                }, datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.HOUR_OF_DAY),
+                        datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.MINUTE),
                         true);
                 dialog.show();
             }
@@ -123,21 +133,21 @@ public class MainActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                Calendar newDate = timeDisplay.getCurrentlyDisplayedDate();
+                                Calendar newDate = datetimeDisplay.getCurrentlyDisplayedDate();
                                 newDate.set(Calendar.YEAR, year);
                                 newDate.set(Calendar.MONTH, month);
                                 newDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                updateSwimmingPoolViewForDate(newDate);
+                                setNewDatetimeAndUpdateSwimmingPoolIfIsValid(newDate);
                             }
                         },
-                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.YEAR),
-                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.MONTH),
-                        timeDisplay.getCurrentlyDisplayedDate().get(Calendar.DAY_OF_MONTH));
+                        datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.YEAR),
+                        datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.MONTH),
+                        datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
             }
         });
 
-        timeDisplay = new TimeDisplay.Builder()
+        datetimeDisplay = new DatetimeDisplay.Builder()
                 .clockTextView(clockTextView)
                 .dateTextView(dateTextView)
                 .build();
@@ -155,12 +165,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Load nearest time
                 updateOccupancy();
-                setNewTimeAndUpdateSwimmingPoolIfIsValid(timeDisplay.getClosestValidDateFromNow());
+                setNewDatetimeAndUpdateSwimmingPoolIfIsValid(datetimeDisplay.getClosestValidDateFromNow());
+                arrowLeft.setClickable(false);
+                arrowLeft.setEnabled(false);
             }
         });
 
-        updateSwimmingPoolViewForDate(timeDisplay.getCurrentlyDisplayedDate());
-        timeDisplay.setTimeToDisplay(timeDisplay.getCurrentlyDisplayedDate());
+        setDatetimeToViewAndUpdateSwimmingPoolForDatetime(datetimeDisplay.getCurrentlyDisplayedDate());
         updateOccupancy();
     }
 
@@ -169,22 +180,30 @@ public class MainActivity extends AppCompatActivity {
      * time display and swimming pool view
      * @param minutes amount of minutes to add
      */
-    private void addMinutesAndUpdateSwimmingPoolIfNewTimeIsValid(int minutes) {
-        Calendar newDate = timeDisplay.addMinutesToCurrentlyDisplayedDate(minutes);
-        setNewTimeAndUpdateSwimmingPoolIfIsValid(newDate);
+    private void addMinutesAndUpdateSwimmingPoolIfNewDatetimeIsValid(int minutes) {
+        Calendar newDate = datetimeDisplay.addMinutesToCurrentlyDisplayedDatetime(minutes);
+        setNewDatetimeAndUpdateSwimmingPoolIfIsValid(newDate);
     }
 
     /**
      * Sets new time to time display and updates swimming pool view accordingly.
-     * @param newTime time to set
+     * @param newDatetime time to set
      */
-    private void setNewTimeAndUpdateSwimmingPoolIfIsValid(Calendar newTime) {
-        if (timeDisplay.isTimeValid(newTime)) {
-            timeDisplay.setTimeToDisplay(newTime);
-            updateSwimmingPoolViewForDate(timeDisplay.getClosestValidDateFrom(newTime));
+    private void setNewDatetimeAndUpdateSwimmingPoolIfIsValid(Calendar newDatetime) {
+        if (datetimeDisplay.isTimeValid(newDatetime)) {
+            setDatetimeToViewAndUpdateSwimmingPoolForDatetime(newDatetime);
         } else {
-            showErrorMessageInvalidDate();
+            if (!datetimeDisplay.isDisplayedValidTime()) {
+                setDatetimeToViewAndUpdateSwimmingPoolForDatetime(datetimeDisplay.getClosestValidDateFromNow());
+            } else {
+                showErrorMessageInvalidDate();
+            }
         }
+    }
+
+    private void setDatetimeToViewAndUpdateSwimmingPoolForDatetime(Calendar datetime) {
+        datetimeDisplay.setDatetimeToDisplay(datetime);
+        updateSwimmingPoolViewForDatetime(datetimeDisplay.getClosestValidDateFrom(datetime));
     }
 
     /**
@@ -192,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
      * itself is responsibility of broadcast receiver.
      * @param datetime date and time for which the swimming pool will be downloaded
      */
-    private void updateSwimmingPoolViewForDate(Calendar datetime) {
+    private void updateSwimmingPoolViewForDatetime(Calendar datetime) {
         progressBar.setVisibility(View.VISIBLE);
         swimmingPoolView.setVisibility(View.INVISIBLE);
 
