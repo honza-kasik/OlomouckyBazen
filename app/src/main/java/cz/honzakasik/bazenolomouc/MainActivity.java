@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addMinutesAndUpdateSwimmingPoolIfNewDatetimeIsValid(30);
-                arrowLeft.setEnabled(true);
                 arrowLeft.setClickable(true);
+                arrowLeft.setEnabled(true);
             }
         });
 
@@ -116,6 +116,10 @@ public class MainActivity extends AppCompatActivity {
                         newTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         newTime.set(Calendar.MINUTE, minute);
                         setNewDatetimeAndUpdateSwimmingPoolIfIsValid(newTime);
+                        if (datetimeDisplay.isTimeValid(newTime)) {
+                            arrowLeft.setClickable(true);
+                            arrowLeft.setEnabled(true);
+                        }
                     }
                 }, datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.HOUR_OF_DAY),
                         datetimeDisplay.getCurrentlyDisplayedDate().get(Calendar.MINUTE),
