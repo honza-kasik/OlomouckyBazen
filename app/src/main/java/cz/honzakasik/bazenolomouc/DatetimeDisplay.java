@@ -11,16 +11,16 @@ import java.util.Calendar;
 /**
  * Helper class for activity displaying swimming pool
  */
-public class TimeDisplay {
+public class DatetimeDisplay {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeDisplay.class);
+    private static final Logger logger = LoggerFactory.getLogger(DatetimeDisplay.class);
 
     private TextView dateTextView;
     private TextView clockTextView;
 
     private Calendar currentlyDisplayedDate;
 
-    private TimeDisplay(Builder builder) {
+    private DatetimeDisplay(Builder builder) {
         this.dateTextView = builder.dateTextView;
         this.clockTextView = builder.clockTextView;
         this.currentlyDisplayedDate = getClosestValidDateFromNow();
@@ -30,7 +30,7 @@ public class TimeDisplay {
      * Sets time and date to display
      * @param datetime this will be set
      */
-    public void setTimeToDisplay(Calendar datetime) {
+    public void setDatetimeToDisplay(Calendar datetime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         clockTextView.setText(dateFormat.format(datetime.getTime()));
         dateTextView.setText(datetime.get(Calendar.DAY_OF_MONTH) + "." +
@@ -62,7 +62,7 @@ public class TimeDisplay {
      * @param minutes amount of minutes to add
      * @return new {@link Calendar} with date 'currently displayed' + minutes
      */
-    public Calendar addMinutesToCurrentlyDisplayedDate(int minutes) {
+    public Calendar addMinutesToCurrentlyDisplayedDatetime(int minutes) {
         Calendar newDate = getCurrentlyDisplayedDate();
         newDate.add(Calendar.MINUTE, minutes);
         return newDate;
@@ -135,9 +135,9 @@ public class TimeDisplay {
             }
         }
 
-        public TimeDisplay build() {
+        public DatetimeDisplay build() {
             validate();
-            return new TimeDisplay(this);
+            return new DatetimeDisplay(this);
         }
 
     }
