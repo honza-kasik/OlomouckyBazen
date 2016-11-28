@@ -10,6 +10,6 @@ Application showing current occupancy and available tracks at Olomouc swimming p
 
 1. Download desired release or clone repository
 1. `./gradlew assemble`
-1. Builded app is in `build/apk/`
+1. Built app is in `build/apk/`
 
 ![Application screenshot](http://i.imgur.com/qZm6wPX.png)
