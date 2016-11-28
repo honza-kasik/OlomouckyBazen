@@ -60,7 +60,8 @@
     </RelativeLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:background="#424242"
         android:padding="10dp"
         android:elevation="5dp"
@@ -68,20 +69,20 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/SwimmingPoolActivity.OccupancyLabel"
-            android:layout_alignParentStart="true"
+            style="@style/SwimmingPoolActivity.OccupancyLabel.Headline"
             android:layout_width="wrap_content"
             android:text="@string/swimming_pool_occupation_label"
             android:layout_height="wrap_content" />
 
         <TextView
-            style="@style/SwimmingPoolActivity.OccupancyLabel"
-            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:text="There were 64 swimmers at 05:00"
+            style="@style/SwimmingPoolActivity.OccupancyLabel.Occupancy"
             android:id="@+id/occupancy_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <RelativeLayout
