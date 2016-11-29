@@ -56,9 +56,11 @@ public class SwimmingPoolView extends View {
 
     public void setSwimmingPool(SwimmingPool swimmingPool) {
         this.swimmingPool = swimmingPool;
-        preAllocatedRectangles = new ArrayList<>(swimmingPool.getTracks().size());
-        for (int i = 0; i < swimmingPool.getTracks().size(); i++) {
-            preAllocatedRectangles.add(new Rect());
+        if (swimmingPool.getTracks() != null) {
+            preAllocatedRectangles = new ArrayList<>(swimmingPool.getTracks().size());
+            for (int i = 0; i < swimmingPool.getTracks().size(); i++) {
+                preAllocatedRectangles.add(new Rect());
+            }
         }
     }
 
