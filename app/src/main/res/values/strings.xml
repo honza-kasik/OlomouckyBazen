@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Swimming Pool Olomouc</string>
-    <string name="app_description">Application showing occupancy and current temperature in Olomouc swimming pool. This app is not official!</string>
-    <string name="app_credits">Author: Honza Kašík – honzakasik.cz. If you run into any problems fill an issue on GitHub.</string>
+    <string name="app_description">Unofficial application showing occupancy and available tracks for public at Olomouc swimming pool.</string>
+    <string name="app_credits">Author: Honza Kašík – honzakasik.cz. If you run into any problems, please, fill an issue on GitHub.</string>
 
     <string name="invalid_date_error_message">Invalid date!</string>
     <string name="swimming_pool_occupation_label">Swimming pool occupation</string>
