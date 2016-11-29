@@ -11,6 +11,9 @@ import android.view.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 
 @SuppressWarnings("SuspiciousNameCombination")
@@ -18,26 +21,15 @@ public class SwimmingPoolView extends View {
 
     private static final Logger logger = LoggerFactory.getLogger(SwimmingPool.class);
 
-    private SwimmingPool swimmingPool = initTestSwimmmingPool();
+    private SwimmingPool swimmingPool;
 
-    private SwimmingPool initTestSwimmmingPool() {
-        return new SwimmingPool.Builder()
-                .track(new SwimmingPool.Track(false))
-                .track(new SwimmingPool.Track(true))
-                .track(new SwimmingPool.Track(true))
-                .track(new SwimmingPool.Track(true))
-                .track(new SwimmingPool.Track(false))
-                .track(new SwimmingPool.Track(false))
-                .track(new SwimmingPool.Track(true))
-                .track(new SwimmingPool.Track(false))
-                .orientation(SwimmingPool.TrackOrientation.VERTICAL)
-                .build();
-
-    }
+    private List<Rect> preAllocatedRectangles;
 
     private Paint availableForPublic = initAvailableForPublicPaint();
     private Paint notAvailableForPublic = initNotAvailableForPublicPaint();
     private Paint linePaint = initLinePaint();
+    private Paint indexPaint = initIndexPaint();
+    private Rect backgroundRect = new Rect();
 
     private int measuredWidth, measuredHeight;
 
@@ -51,12 +43,23 @@ public class SwimmingPoolView extends View {
         return linePaint;
     }
 
+    private Paint initIndexPaint() {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTextSize(15 * getResources().getDisplayMetrics().density);
+        return paint;
+    }
+
     public SwimmingPoolView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     public void setSwimmingPool(SwimmingPool swimmingPool) {
         this.swimmingPool = swimmingPool;
+        preAllocatedRectangles = new ArrayList<>(swimmingPool.getTracks().size());
+        for (int i = 0; i < swimmingPool.getTracks().size(); i++) {
+            preAllocatedRectangles.add(new Rect());
+        }
     }
 
     @Override
@@ -64,14 +67,15 @@ public class SwimmingPoolView extends View {
         super.onDraw(canvas);
 
         if (swimmingPool == null) {
+            logger.debug("Trying to draw null swimming pool.");
             return;
         }
 
-        Rect rect = new Rect(0, 0, canvas.getWidth(), canvas.getHeight());
-        canvas.drawRect(rect, linePaint);
+        backgroundRect.set(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.drawRect(backgroundRect, linePaint);
 
         if (!swimmingPool.isOpen()) {
-            drawSwimmingPoolIsClosedMessage(canvas, rect);
+            drawSwimmingPoolIsClosedMessage(canvas, backgroundRect);
             logger.debug("Swimming pool is currently closed!");
         } else if (swimmingPool.getOrientation() == SwimmingPool.TrackOrientation.HORIZONTAL) {
             drawHorizontalSwimmingPool(canvas);
@@ -82,7 +86,6 @@ public class SwimmingPoolView extends View {
 
     private void drawSwimmingPoolIsClosedMessage(Canvas canvas, Rect rect) {
         String text = getResources().getString(R.string.swimming_pool_is_closed_now);
-        //String text = "foobar dfgd reew ewrgrew";
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(ContextCompat.getColor(getContext(), R.color.swimmingPoolIsClosedText));
@@ -117,7 +120,8 @@ public class SwimmingPoolView extends View {
         for (int i = 0; i < COUNT_OF_TRACKS; i++) {
             SwimmingPool.Track currentTrack = swimmingPool.getTracks().get(i);
 
-            Rect rect = new Rect(0, X_PADDING, TRACK_WIDTH, TRACK_LENGTH);
+            Rect rect = preAllocatedRectangles.get(i);
+            rect.set(0, X_PADDING, TRACK_WIDTH, TRACK_LENGTH);
             rect.offset((TRACK_WIDTH * i) + Y_PADDING, 0);
 
             canvas.drawRect(rect, currentTrack.isForPublic() ? availableForPublic : notAvailableForPublic);
@@ -138,7 +142,8 @@ public class SwimmingPoolView extends View {
         for (int i = 0; i < COUNT_OF_TRACKS; i++) {
             SwimmingPool.Track currentTrack = swimmingPool.getTracks().get(i);
 
-            Rect rect = new Rect(X_PADDING, 0, TRACK_LENGTH, TRACK_WIDTH);
+            Rect rect = preAllocatedRectangles.get(i);
+            rect.set(X_PADDING, 0, TRACK_LENGTH, TRACK_WIDTH);
             rect.offset(0, (TRACK_WIDTH * i) + Y_PADDING);
 
             canvas.drawRect(rect, currentTrack.isForPublic() ? availableForPublic : notAvailableForPublic);
@@ -152,14 +157,11 @@ public class SwimmingPoolView extends View {
     private void drawIndexOnCenterOfRectangle(Canvas canvas, Rect rect, int i, SwimmingPool.Track track) {
         final String text = String.valueOf(i + 1);
 
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(track.isForPublic() ? ContextCompat.getColor(getContext(), R.color.swimmingPoolForPublicText) :
+        indexPaint.setColor(track.isForPublic() ? ContextCompat.getColor(getContext(), R.color.swimmingPoolForPublicText) :
                 ContextCompat.getColor(getContext(), R.color.swimmingPoolNotForPublicText));
-        paint.setStyle(Paint.Style.FILL);
-        paint.setTextSize(15 * getResources().getDisplayMetrics().density);
 
-        float textWidth = paint.measureText(text);
-        canvas.drawText(text, rect.exactCenterX() - (textWidth/2), rect.exactCenterY() + (textWidth/2), paint);
+        float textWidth = indexPaint.measureText(text);
+        canvas.drawText(text, rect.exactCenterX() - (textWidth/2), rect.exactCenterY() + (textWidth/2), indexPaint);
     }
 
     @Override
