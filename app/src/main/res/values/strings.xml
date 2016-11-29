@@ -12,6 +12,8 @@
     <string name="about_application">About</string>
     <string name="update_data">Update</string>
 
+    <string name="connection_error_message">There was a problem with internet connection. Try again later!</string>
+
     <!--%2$d is swimmer count and %1$s time-->
     <string name="pool_occupancy">There were %2$d swimmers at %1$s hours</string>
 </resources>

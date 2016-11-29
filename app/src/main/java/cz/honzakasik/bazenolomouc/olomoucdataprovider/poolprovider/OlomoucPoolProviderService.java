@@ -15,10 +15,12 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import cz.honzakasik.bazenolomouc.R;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
 
@@ -66,34 +68,28 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 saveToCacheIfNotNull(date, swimmingPool);
             }
         } catch (IOException e) {
-            logger.error("Error when checking cache for key '{}'", dateKey, e);
+            if (e instanceof UnknownHostException) {
+                logger.error("Could not resolve host!");
+                sendErrorMessageAsBroadcast(getString(R.string.connection_error_message));
+            } else {
+                logger.error("Error when checking cache for key '{}'", dateKey, e);
+            }
+        } catch (NoPoolParsedException e) {
+            logger.error("No pool was parsed!", e);
         }
     }
 
-    private SwimmingPool downloadAndParseSwimmingPool(Date datetime) {
-        try {
-            String url = parseURLForDatetime(datetime);
-            logger.debug("Connecting to url: '{}'", url);
-            Connection connection = Jsoup.connect(url);
-            Document doc = connection.get();
+    private SwimmingPool downloadAndParseSwimmingPool(Date datetime) throws NoPoolParsedException, IOException {
+        String url = parseURLForDatetime(datetime);
+        logger.debug("Connecting to url: '{}'", url);
+        Connection connection = Jsoup.connect(url);
+        Document doc = connection.get();
 
-            SwimmingPool swimmingPool = null;
-            try {
-                swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
-                logger.debug("Obtained '{}' swimming pool!", swimmingPool.getOrientation());
-            } catch (NoPoolParsedException e) {
-                logger.warn("No pool was found!");
-            }
-            return swimmingPool;
+        SwimmingPool swimmingPool = null;
+        swimmingPool = new OlomoucSwimmingPoolParser(doc).parseSwimmingPool();
+        logger.debug("Obtained '{}' swimming pool!", swimmingPool.getOrientation());
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            logger.error("Error during URL creation!", e);
-        } catch (IOException e) {
-            logger.error("Could not connect!", e);
-        }
-        return null;
+        return swimmingPool;
     }
 
     private String parseURLForDatetime(Date date) throws MalformedURLException {
@@ -133,8 +129,17 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
     private void sendSwimmingPoolAsBroadcast(SwimmingPool swimmingPool) {
         Intent dataIntent = new Intent();
         dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);
-        dataIntent.setAction(ACTION_DONE);
+        dataIntent.setAction(ACTION_SWIMMING_POOL_DOWNLOADED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
-        logger.debug("Broadcast sent!");
+        logger.debug("Broadcast with swimming pool sent!");
+    }
+
+    private void sendErrorMessageAsBroadcast(String errorMessage) {
+        Intent dataIntent = new Intent();
+        dataIntent.putExtra(ERROR_MESSAGE_EXTRA_IDENTIFIER, errorMessage);
+        dataIntent.setAction(ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
+        logger.debug("Error broadcast sent!");
+
     }
 }

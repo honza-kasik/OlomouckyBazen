@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             logger.debug("Broadcast received!");
 
             String action = intent.getAction();
-            if (action.equals(SwimmingPoolProviderService.ACTION_DONE)) {
+            if (action.equals(SwimmingPoolProviderService.ACTION_SWIMMING_POOL_DOWNLOADED)) {
                 logger.debug("Swimming pool broadcast recieved");
                 SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
 
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
                 logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
                 updateOccupancyLabel(occupancy);
+            } else if (action.equals(SwimmingPoolProviderService.ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE)) {
+                showErrorMessage(intent.getStringExtra(SwimmingPoolProviderService.ERROR_MESSAGE_EXTRA_IDENTIFIER));
             }
         }
     };
@@ -232,8 +234,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SwimmingPoolProviderService.ACTION_DONE);
+        intentFilter.addAction(SwimmingPoolProviderService.ACTION_SWIMMING_POOL_DOWNLOADED);
         intentFilter.addAction(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED);
+        intentFilter.addAction(SwimmingPoolProviderService.ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
     }
 
@@ -307,7 +310,14 @@ public class MainActivity extends AppCompatActivity {
      * Shows error message as toast
      */
     private void showErrorMessageInvalidDate() {
-        Toast.makeText(this, getResources().getString(R.string.invalid_date_error_message),
+        showErrorMessage(getResources().getString(R.string.invalid_date_error_message));
+    }
+
+    /**
+     * Shows error message as toast
+     */
+    private void showErrorMessage(String message) {
+        Toast.makeText(this, message,
                 Toast.LENGTH_LONG).show();
     }
 
