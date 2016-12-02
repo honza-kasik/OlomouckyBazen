@@ -74,17 +74,18 @@
         <TextView
             android:id="@+id/occupancy_text_view"
             style="@style/SwimmingPoolActivity.OccupancyLabel.OccupancyLandscape"
-            android:text="There were 64 swimmers at 05:00"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 
-        <!--ProgressBar
+        <ProgressBar
+            android:id="@+id/current_occupancy_message"
+            android:indeterminate="true"
             android:layout_width="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"
-            android:layout_height="20dp" /-->
+            android:layout_height="20dp" />
 
     </RelativeLayout>
 
