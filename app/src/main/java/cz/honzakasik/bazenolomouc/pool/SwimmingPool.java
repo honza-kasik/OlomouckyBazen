@@ -52,7 +52,7 @@ public class SwimmingPool implements Parcelable {
     /**
      * Individual track in swimming pool
      */
-    public static final class Track {
+    public static final class Track implements Parcelable {
 
         private boolean isForPublic;
 
@@ -63,6 +63,33 @@ public class SwimmingPool implements Parcelable {
         public boolean isForPublic() {
             return isForPublic;
         }
+
+        protected Track(Parcel in) {
+            isForPublic = in.readByte() != 0x00;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeByte((byte) (isForPublic ? 0x01 : 0x00));
+        }
+
+        @SuppressWarnings("unused")
+        public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
+            @Override
+            public Track createFromParcel(Parcel in) {
+                return new Track(in);
+            }
+
+            @Override
+            public Track[] newArray(int size) {
+                return new Track[size];
+            }
+        };
     }
 
     public static final class Builder {

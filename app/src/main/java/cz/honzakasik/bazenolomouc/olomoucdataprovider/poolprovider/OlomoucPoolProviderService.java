@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import cz.honzakasik.bazenolomouc.R;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.SimpleWakefulBroadcastReceiver;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
 
@@ -76,6 +77,11 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             }
         } catch (NoPoolParsedException e) {
             logger.error("No pool was parsed!", e);
+        } finally {
+            logger.debug("Calling complete wakeful intent!");
+            if (SimpleWakefulBroadcastReceiver.completeWakefulIntent(intent)) {
+                logger.debug("Succesfully completed wakeful service!");
+            }
         }
     }
 
@@ -109,21 +115,11 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 .replaceAll(MINUTES, String.valueOf(minutes));
     }
 
-    private void saveToCacheIfNotNull(Date date, SwimmingPool swimmingPool) {
+    private void saveToCacheIfNotNull(Date date, SwimmingPool swimmingPool) throws IOException {
         if (swimmingPool == null) {
             return;
         }
-        Reservoir.putAsync(String.valueOf(date.getTime()), swimmingPool, new ReservoirPutCallback() {
-            @Override
-            public void onSuccess() {
-                logger.debug("Successfully saved to cache!");
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                logger.error("Failure when saving to cache", e);
-            }
-        });
+        Reservoir.put(String.valueOf(date.getTime()), swimmingPool);
     }
 
     private void sendSwimmingPoolAsBroadcast(SwimmingPool swimmingPool, long datetime) {

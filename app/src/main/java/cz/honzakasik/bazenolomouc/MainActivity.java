@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.SimpleWakefulBroadcastReceiver;
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.occupancy.OlomoucOccupancyProviderService;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
 
     private SwimmingPoolView swimmingPoolView;
-    private ProgressBar progressBar;
+    private ProgressBar swimmingPoolProgressBar;
 
     private TextView occupancyTextView;
     private ProgressBar occupancyTextProgressBar;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 if (datetime == datetimeDisplay.getCurrentlyDisplayedDate().getTimeInMillis()) {
                     swimmingPoolView.setSwimmingPool(swimmingPool);
 
-                    progressBar.setVisibility(View.INVISIBLE);
+                    swimmingPoolProgressBar.setVisibility(View.INVISIBLE);
                     swimmingPoolView.setVisibility(View.VISIBLE);
 
                     swimmingPoolView.invalidate();
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         swimmingPoolView = (SwimmingPoolView) findViewById(R.id.swimming_pool);
-        progressBar = (ProgressBar) findViewById(R.id.swimming_pool_progress_bar);
+        swimmingPoolProgressBar = (ProgressBar) findViewById(R.id.swimming_pool_progress_bar);
         occupancyTextView = (TextView) findViewById(R.id.occupancy_text_view);
         occupancyTextProgressBar = (ProgressBar) findViewById(R.id.current_occupancy_message);
 
@@ -231,14 +232,22 @@ public class MainActivity extends AppCompatActivity {
      * @param datetime date and time for which the swimming pool will be downloaded
      */
     private void updateSwimmingPoolViewForDatetime(Calendar datetime) {
-        progressBar.setVisibility(View.VISIBLE);
-        swimmingPoolView.setVisibility(View.INVISIBLE);
+        updateSwimmingPoolViewForDatetime(datetime, false);
+    }
+
+
+    private void updateSwimmingPoolViewForDatetime(Calendar datetime, boolean progressbarAlreadyShown) {
+
+        if (!progressbarAlreadyShown) {
+            swimmingPoolProgressBar.setVisibility(View.VISIBLE);
+            swimmingPoolView.setVisibility(View.INVISIBLE);
+        }
 
         Intent poolProviderServiceIntent = new Intent(this, OlomoucPoolProviderService.class);
         poolProviderServiceIntent.putExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, datetime.getTime().getTime());
 
         logger.debug("Starting service!");
-        startService(poolProviderServiceIntent);
+        SimpleWakefulBroadcastReceiver.startWakefulService(this, poolProviderServiceIntent);
     }
 
 
@@ -251,6 +260,14 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED);
         intentFilter.addAction(SwimmingPoolProviderService.ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+
+        if (swimmingPoolProgressBar.getVisibility() == View.VISIBLE) {
+            updateSwimmingPoolViewForDatetime(datetimeDisplay.getCurrentlyDisplayedDate(), true);
+        }
+
+        if (occupancyTextProgressBar.getVisibility() == View.VISIBLE) {
+            updateOccupancy(true);
+        }
     }
 
     @Override
@@ -303,12 +320,18 @@ public class MainActivity extends AppCompatActivity {
      * Retrieves new information from server about occupancy
      */
     private void updateOccupancy() {
+        updateOccupancy(false);
+    }
+
+    private void updateOccupancy(boolean progressbarAlreadyShown) {
         Intent intent = new Intent(this, OlomoucOccupancyProviderService.class);
-        startService(intent);
+        SimpleWakefulBroadcastReceiver.startWakefulService(this, intent);
         logger.debug("Started occupancy provider service!");
 
-        occupancyTextProgressBar.setVisibility(View.VISIBLE);
-        occupancyTextView.setVisibility(View.INVISIBLE);
+        if (!progressbarAlreadyShown) {
+            occupancyTextProgressBar.setVisibility(View.VISIBLE);
+            occupancyTextView.setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -339,5 +362,4 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message,
                 Toast.LENGTH_LONG).show();
     }
-
 }

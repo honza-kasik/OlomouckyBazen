@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.OlomoucUniversalTableParser;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.SimpleWakefulBroadcastReceiver;
 
 public class OlomoucOccupancyProviderService extends IntentService {
 
@@ -49,6 +50,8 @@ public class OlomoucOccupancyProviderService extends IntentService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            SimpleWakefulBroadcastReceiver.completeWakefulIntent(intent);
         }
     }
 }
