@@ -53,15 +53,26 @@ public class MainActivity extends AppCompatActivity {
 
             String action = intent.getAction();
             if (action.equals(SwimmingPoolProviderService.ACTION_SWIMMING_POOL_DOWNLOADED)) {
-                logger.debug("Swimming pool broadcast recieved");
+                logger.debug("Swimming pool broadcast received");
                 SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
+                long datetime = intent.getLongExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, -1);
 
-                swimmingPoolView.setSwimmingPool(swimmingPool);
+                //if timestamp is corresponding to currently set time
+                if (datetime == datetimeDisplay.getCurrentlyDisplayedDate().getTimeInMillis()) {
+                    swimmingPoolView.setSwimmingPool(swimmingPool);
 
-                progressBar.setVisibility(View.INVISIBLE);
-                swimmingPoolView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    swimmingPoolView.setVisibility(View.VISIBLE);
 
-                swimmingPoolView.invalidate();
+                    swimmingPoolView.invalidate();
+                } else {
+                    if (datetime == -1) {
+                        logger.error("Datetime was not attached!");
+                    } else {
+                        logger.warn("Received swimming poool for different time!");
+                    }
+                }
+
             } else if (action.equals(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED)) {
                 int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
                 logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
