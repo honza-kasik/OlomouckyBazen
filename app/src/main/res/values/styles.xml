@@ -22,10 +22,39 @@
         <item name="android:textSize">11sp</item>
     </style>
 
+    <style name="SwimmingPoolActivity.OccupancyLabel.OccupancyLandscape">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 
     <style name="SwimmingPoolActivity.Selector">
         <item name="android:background">#66bb6a</item>
         <item name="android:elevation">3dp</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.ImageButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/arrow_right</item>
+        <item name="android:background">@null</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.ImageButton.Arrow">
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.ImageButton.Arrow.Right">
+        <item name="android:src">@drawable/arrow_right</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.ImageButton.Arrow.Left">
+        <item name="android:src">@drawable/arrow_left</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.ImageButton.Refresh">
+        <item name="android:padding">20dp</item>
+        <item name="android:src">@drawable/reload_icon</item>
     </style>
 
     <style name="SwimmingPoolActivity.ClockText">
@@ -37,10 +66,18 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
+    <style name="SwimmingPoolActivity.ClockText.Landscape">
+        <item name="android:textSize">35sp</item>
+    </style>
+
     <style name="SwimmingPoolActivity.DateText">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/swimmingPoolDateText</item>
         <item name="android:layout_marginBottom">20dp</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.DateText.Landscape">
+        <item name="android:textSize">15sp</item>
     </style>
 
 
