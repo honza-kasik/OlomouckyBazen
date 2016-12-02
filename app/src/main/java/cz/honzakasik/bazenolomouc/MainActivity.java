@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private TextView occupancyTextView;
+    private ProgressBar occupancyTextProgressBar;
 
     private DatetimeDisplay datetimeDisplay;
 
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         swimmingPoolView = (SwimmingPoolView) findViewById(R.id.swimming_pool);
         progressBar = (ProgressBar) findViewById(R.id.swimming_pool_progress_bar);
         occupancyTextView = (TextView) findViewById(R.id.occupancy_text_view);
+        occupancyTextProgressBar = (ProgressBar) findViewById(R.id.current_occupancy_message);
 
         final ImageButton arrowLeft = (ImageButton) findViewById(R.id.swimming_pool_arrow_left);
         final ImageButton arrowRight = (ImageButton) findViewById(R.id.swimming_pool_arrow_right);
@@ -293,6 +295,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, OlomoucOccupancyProviderService.class);
         startService(intent);
         logger.debug("Started occupancy provider service!");
+
+        occupancyTextProgressBar.setVisibility(View.VISIBLE);
+        occupancyTextView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -304,6 +309,9 @@ public class MainActivity extends AppCompatActivity {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
+
+        occupancyTextProgressBar.setVisibility(View.INVISIBLE);
+        occupancyTextView.setVisibility(View.VISIBLE);
     }
 
     /**

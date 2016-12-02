@@ -16,56 +16,50 @@
     <RelativeLayout
         style="@style/SwimmingPoolActivity.Selector"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="60dp">
 
         <ImageButton
             android:id="@+id/swimming_pool_arrow_left"
-            style="@style/SwimmingPoolActivity.ImageButton.Arrow.Left"
+            style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
+            android:src="@drawable/arrow_left_whole"
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin"
             android:contentDescription="@string/arrow_left_content_description" />
 
-        <TextView
-            android:text="11:30"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/swimming_pool_time"
-            style="@style/SwimmingPoolActivity.ClockText"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
         <ImageButton
             android:id="@+id/swimming_pool_arrow_right"
             style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
+            android:src="@drawable/arrow_right"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin"
             android:contentDescription="@string/arrow_right_content_description" />
 
         <TextView
+            android:text="11:30"
+            android:id="@+id/swimming_pool_time"
+            style="@style/SwimmingPoolActivity.ClockText.Landscape"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:text="25.11.2016"
+            style="@style/SwimmingPoolActivity.DateText.Landscape"
             android:id="@+id/swimming_pool_date"
-            style="@style/SwimmingPoolActivity.DateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/swimming_pool_time"
-            android:layout_centerHorizontal="true" />
-
-        <ImageButton
-            android:contentDescription="@string/refresh_button_content_description"
-            style="@style/SwimmingPoolActivity.ImageButton.Refresh"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/swimming_pool_clock_refresh_button"
-            android:layout_above="@+id/swimming_pool_time"
-            android:layout_alignStart="@+id/swimming_pool_arrow_left" />
+            android:layout_toRightOf="@id/swimming_pool_time"
+            android:layout_marginLeft="40dp"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:orientation="horizontal"
         android:background="#424242"
-        android:padding="10dp"
+        android:padding="5dp"
         android:elevation="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -73,31 +67,27 @@
         <TextView
             style="@style/SwimmingPoolActivity.OccupancyLabel.Headline"
             android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
             android:text="@string/swimming_pool_occupation_label"
             android:layout_height="wrap_content" />
 
-        <RelativeLayout
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/occupancy_text_view"
+            style="@style/SwimmingPoolActivity.OccupancyLabel.OccupancyLandscape"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 
-            <TextView
-                style="@style/SwimmingPoolActivity.OccupancyLabel.Occupancy"
-                android:id="@+id/occupancy_text_view"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <ProgressBar
+            android:id="@+id/current_occupancy_message"
+            android:indeterminate="true"
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_height="20dp" />
 
-            <ProgressBar
-                android:id="@+id/current_occupancy_message"
-                android:indeterminate="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="14dp" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <RelativeLayout
@@ -106,9 +96,10 @@
 
         <cz.honzakasik.bazenolomouc.SwimmingPoolView
             android:visibility="invisible"
+            android:layout_centerInParent="true"
             android:elevation="10dp"
             android:id="@+id/swimming_pool"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <ProgressBar
@@ -117,9 +108,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <ImageButton
+            android:contentDescription="@string/refresh_button_content_description"
+            style="@style/SwimmingPoolActivity.ImageButton.Refresh.Landscape"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/swimming_pool_clock_refresh_button" />
+
     </RelativeLayout>
-
-
 
 
 </LinearLayout>
