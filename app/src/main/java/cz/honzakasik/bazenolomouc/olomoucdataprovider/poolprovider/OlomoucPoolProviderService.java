@@ -60,11 +60,11 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 } catch (NullPointerException e) {
                     logger.error("Cached value for key '{}' is null!", dateKey);
                 }
-                sendSwimmingPoolAsBroadcast(swimmingPool);
+                sendSwimmingPoolAsBroadcast(swimmingPool, datetime);
             } else {
                 logger.debug("Cache miss!");
                 SwimmingPool swimmingPool = downloadAndParseSwimmingPool(date);
-                sendSwimmingPoolAsBroadcast(swimmingPool);
+                sendSwimmingPoolAsBroadcast(swimmingPool, datetime);
                 saveToCacheIfNotNull(date, swimmingPool);
             }
         } catch (IOException e) {
@@ -126,9 +126,10 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         });
     }
 
-    private void sendSwimmingPoolAsBroadcast(SwimmingPool swimmingPool) {
+    private void sendSwimmingPoolAsBroadcast(SwimmingPool swimmingPool, long datetime) {
         Intent dataIntent = new Intent();
         dataIntent.putExtra(SWIMMING_POOL_EXTRA_IDENTIFIER, swimmingPool);
+        dataIntent.putExtra(DATETIME_EXTRA_IDENTIFIER, datetime);
         dataIntent.setAction(ACTION_SWIMMING_POOL_DOWNLOADED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
         logger.debug("Broadcast with swimming pool sent!");
