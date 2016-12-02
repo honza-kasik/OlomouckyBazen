@@ -110,7 +110,7 @@
 
         <ImageButton
             android:contentDescription="@string/refresh_button_content_description"
-            style="@style/SwimmingPoolActivity.ImageButton.Refresh"
+            style="@style/SwimmingPoolActivity.ImageButton.Refresh.Landscape"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:id="@+id/swimming_pool_clock_refresh_button" />

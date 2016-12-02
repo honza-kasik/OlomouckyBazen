@@ -49,12 +49,15 @@
     </style>
 
     <style name="SwimmingPoolActivity.ImageButton.Arrow.Left">
-        <item name="android:src">@drawable/arrow_left</item>
+        <item name="android:src">@drawable/arrow_left_whole</item>
     </style>
 
     <style name="SwimmingPoolActivity.ImageButton.Refresh">
-        <item name="android:padding">20dp</item>
         <item name="android:src">@drawable/reload_icon</item>
+    </style>
+
+    <style name="SwimmingPoolActivity.ImageButton.Refresh.Landscape">
+        <item name="android:padding">20dp</item>
     </style>
 
     <style name="SwimmingPoolActivity.ClockText">

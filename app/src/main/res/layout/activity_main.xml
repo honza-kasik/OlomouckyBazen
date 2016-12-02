@@ -20,10 +20,7 @@
 
         <ImageButton
             android:id="@+id/swimming_pool_arrow_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/arrow_left_whole"
-            android:layout_centerVertical="true"
+            style="@style/SwimmingPoolActivity.ImageButton.Arrow.Left"
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin"
             android:contentDescription="@string/arrow_left_content_description" />
@@ -40,10 +37,7 @@
 
         <ImageButton
             android:id="@+id/swimming_pool_arrow_right"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/arrow_right"
+            style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin"
             android:contentDescription="@string/arrow_right_content_description" />
@@ -59,9 +53,7 @@
 
         <ImageButton
             android:contentDescription="@string/refresh_button_content_description"
-            android:layout_width="wrap_content"
-            android:background="@drawable/reload_icon"
-            android:layout_height="wrap_content"
+            style="@style/SwimmingPoolActivity.ImageButton.Refresh"
             android:layout_marginBottom="20dp"
             android:id="@+id/swimming_pool_clock_refresh_button"
             android:layout_above="@+id/swimming_pool_time"
