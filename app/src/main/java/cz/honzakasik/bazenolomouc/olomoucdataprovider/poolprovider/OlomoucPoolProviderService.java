@@ -2,9 +2,9 @@ package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.anupcowkur.reservoir.Reservoir;
-import com.anupcowkur.reservoir.ReservoirPutCallback;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -76,6 +75,11 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             }
         } catch (NoPoolParsedException e) {
             logger.error("No pool was parsed!", e);
+        } finally {
+            logger.debug("Calling complete wakeful intent!");
+            if (WakefulBroadcastReceiver.completeWakefulIntent(intent)) {
+                logger.debug("Succesfully completed wakeful service!");
+            }
         }
     }
 
@@ -109,21 +113,11 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 .replaceAll(MINUTES, String.valueOf(minutes));
     }
 
-    private void saveToCacheIfNotNull(Date date, SwimmingPool swimmingPool) {
+    private void saveToCacheIfNotNull(Date date, SwimmingPool swimmingPool) throws IOException {
         if (swimmingPool == null) {
             return;
         }
-        Reservoir.putAsync(String.valueOf(date.getTime()), swimmingPool, new ReservoirPutCallback() {
-            @Override
-            public void onSuccess() {
-                logger.debug("Successfully saved to cache!");
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                logger.error("Failure when saving to cache", e);
-            }
-        });
+        Reservoir.put(String.valueOf(date.getTime()), swimmingPool);
     }
 
     private void sendSwimmingPoolAsBroadcast(SwimmingPool swimmingPool, long datetime) {

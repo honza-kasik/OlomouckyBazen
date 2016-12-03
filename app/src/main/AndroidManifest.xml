@@ -3,6 +3,7 @@
     package="cz.honzakasik.bazenolomouc">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".App"
@@ -21,6 +22,7 @@
 
         <service android:name=".olomoucdataprovider.poolprovider.OlomoucPoolProviderService" />
         <service android:name=".olomoucdataprovider.occupancy.OlomoucOccupancyProviderService" />
+
     </application>
 
 </manifest>
