@@ -36,6 +36,8 @@ import cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider.OlomoucPoolPr
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String DATETIME_SAVED_INSTANCE_IDENTIFIER = "SAVED_DATETIME";
+
     private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
 
     private SwimmingPoolView swimmingPoolView;
@@ -191,7 +193,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setDatetimeToViewAndUpdateSwimmingPoolForDatetime(datetimeDisplay.getCurrentlyDisplayedDate());
+        //load datetime from saved instance if for example rotation changed and this method was called again
+        Calendar initialDateTime = datetimeDisplay.getClosestValidDateFromNow();
+        if (savedInstanceState != null) { //if saved instance state is present
+            logger.debug("Saved instance is present!");
+            final long savedDatetime = savedInstanceState.getLong(DATETIME_SAVED_INSTANCE_IDENTIFIER);
+            if (savedDatetime != 0) {
+                logger.debug("There was set datetime in saved instance!");
+                Calendar newDatetime = Calendar.getInstance();
+                newDatetime.setTimeInMillis(savedDatetime);
+                initialDateTime = newDatetime;
+            }
+        }
+
+        setDatetimeToViewAndUpdateSwimmingPoolForDatetime(initialDateTime);
         updateOccupancy();
     }
 
@@ -281,6 +296,13 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(DATETIME_SAVED_INSTANCE_IDENTIFIER,
+                datetimeDisplay.getCurrentlyDisplayedDate().getTimeInMillis());
     }
 
     @Override
