@@ -2,9 +2,9 @@ package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.anupcowkur.reservoir.Reservoir;
-import com.anupcowkur.reservoir.ReservoirPutCallback;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -21,7 +20,6 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import cz.honzakasik.bazenolomouc.R;
-import cz.honzakasik.bazenolomouc.olomoucdataprovider.SimpleWakefulBroadcastReceiver;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
 
@@ -79,7 +77,7 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
             logger.error("No pool was parsed!", e);
         } finally {
             logger.debug("Calling complete wakeful intent!");
-            if (SimpleWakefulBroadcastReceiver.completeWakefulIntent(intent)) {
+            if (WakefulBroadcastReceiver.completeWakefulIntent(intent)) {
                 logger.debug("Succesfully completed wakeful service!");
             }
         }

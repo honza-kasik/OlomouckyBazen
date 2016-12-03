@@ -3,6 +3,7 @@ package cz.honzakasik.bazenolomouc.olomoucdataprovider.occupancy;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.OlomoucUniversalTableParser;
-import cz.honzakasik.bazenolomouc.olomoucdataprovider.SimpleWakefulBroadcastReceiver;
 
 public class OlomoucOccupancyProviderService extends IntentService {
 
@@ -51,7 +51,7 @@ public class OlomoucOccupancyProviderService extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            SimpleWakefulBroadcastReceiver.completeWakefulIntent(intent);
+            WakefulBroadcastReceiver.completeWakefulIntent(intent);
         }
     }
 }

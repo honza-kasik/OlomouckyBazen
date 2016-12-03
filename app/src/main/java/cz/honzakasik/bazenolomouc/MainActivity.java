@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import cz.honzakasik.bazenolomouc.olomoucdataprovider.SimpleWakefulBroadcastReceiver;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.occupancy.OlomoucOccupancyProviderService;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         poolProviderServiceIntent.putExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, datetime.getTime().getTime());
 
         logger.debug("Starting service!");
-        SimpleWakefulBroadcastReceiver.startWakefulService(this, poolProviderServiceIntent);
+        WakefulBroadcastReceiver.startWakefulService(this, poolProviderServiceIntent);
     }
 
 
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateOccupancy(boolean progressbarAlreadyShown) {
         Intent intent = new Intent(this, OlomoucOccupancyProviderService.class);
-        SimpleWakefulBroadcastReceiver.startWakefulService(this, intent);
+        WakefulBroadcastReceiver.startWakefulService(this, intent);
         logger.debug("Started occupancy provider service!");
 
         if (!progressbarAlreadyShown) {
