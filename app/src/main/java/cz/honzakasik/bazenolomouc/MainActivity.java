@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     private DatetimeDisplay datetimeDisplay;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
         @Override
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 if (datetime == datetimeDisplay.getCurrentlyDisplayedDate().getTimeInMillis()) {
                     swimmingPoolView.setSwimmingPool(swimmingPool);
 
+                    CyclicLayoutLoadManager.loadFinished(swipeRefreshLayout);
                     swimmingPoolProgressBar.setVisibility(View.INVISIBLE);
                     swimmingPoolView.setVisibility(View.VISIBLE);
 
@@ -169,6 +173,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //swipe to refresh listener
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateOccupancy();
+                setNewDatetimeAndUpdateSwimmingPoolIfIsValid(datetimeDisplay.getClosestValidDateFromNow());
+                arrowLeft.setClickable(false);
+                arrowLeft.setEnabled(false);
+            }
+        });
+
         datetimeDisplay = new DatetimeDisplay.Builder()
                 .clockTextView(clockTextView)
                 .dateTextView(dateTextView)
@@ -178,18 +194,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateOccupancy();
-            }
-        });
-
-        ImageButton refreshButton = (ImageButton) findViewById(R.id.swimming_pool_clock_refresh_button);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Load nearest time
-                updateOccupancy();
-                setNewDatetimeAndUpdateSwimmingPoolIfIsValid(datetimeDisplay.getClosestValidDateFromNow());
-                arrowLeft.setClickable(false);
-                arrowLeft.setEnabled(false);
             }
         });
 
@@ -366,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
 
+        CyclicLayoutLoadManager.loadFinished(swipeRefreshLayout);
         occupancyTextProgressBar.setVisibility(View.INVISIBLE);
         occupancyTextView.setVisibility(View.VISIBLE);
     }
@@ -383,5 +388,26 @@ public class MainActivity extends AppCompatActivity {
     private void showErrorMessage(String message) {
         Toast.makeText(this, message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * This class is just a wrapper for managing progress bar and swipe load layout
+     */
+    private static final class CyclicLayoutLoadManager {
+
+        private static final int INITIAL_COUNT = 2;
+
+        private static int countOfItemsToWaitFor = INITIAL_COUNT;
+
+        private static void loadFinished(SwipeRefreshLayout swipeRefreshLayout) {
+            if (swipeRefreshLayout.isRefreshing()) {
+                countOfItemsToWaitFor--;
+                if (countOfItemsToWaitFor == 0) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    countOfItemsToWaitFor = INITIAL_COUNT;
+                }
+            }
+        }
+
     }
 }
