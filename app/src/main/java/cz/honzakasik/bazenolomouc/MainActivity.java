@@ -81,9 +81,14 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } else if (action.equals(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED)) {
-                int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
-                logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
-                updateOccupancyLabel(occupancy);
+                if (intent.hasExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY)) {
+                    int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
+                    logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
+                    updateOccupancyLabel(occupancy);
+                } else {
+                    logger.debug("Occupancy intent received with no occupancy, not updating!");
+                }
+
             } else if (action.equals(SwimmingPoolProviderService.ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE)) {
                 showErrorMessage(intent.getStringExtra(SwimmingPoolProviderService.ERROR_MESSAGE_EXTRA_IDENTIFIER));
             }
@@ -386,8 +391,7 @@ public class MainActivity extends AppCompatActivity {
      * Shows error message as toast
      */
     private void showErrorMessage(String message) {
-        Toast.makeText(this, message,
-                Toast.LENGTH_LONG).show();
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     /**

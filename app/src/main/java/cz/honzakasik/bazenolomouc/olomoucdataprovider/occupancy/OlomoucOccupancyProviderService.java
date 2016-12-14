@@ -39,18 +39,17 @@ public class OlomoucOccupancyProviderService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         logger.debug("Started!");
+        Intent dataIntent = new Intent();
+        dataIntent.setAction(ACTION_OCCUPANCY_PROVIDED);
         Connection connection = Jsoup.connect(URL);
         try {
             Document document = connection.get();
             int occupancy = new OlomoucUniversalTableParser(document, CURRENT_OCCUPANCY_ROW_INDEX).parse();
-
-            Intent dataIntent = new Intent();
-            dataIntent.setAction(ACTION_OCCUPANCY_PROVIDED);
             dataIntent.putExtra(OCCUPANCY_EXTRA_KEY, occupancy);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
             WakefulBroadcastReceiver.completeWakefulIntent(intent);
         }
     }
