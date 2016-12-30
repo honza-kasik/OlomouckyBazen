@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,6 +51,8 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         final Date date = new Date(datetime);
         final String dateKey = String.valueOf(datetime);
 
+        logger.info("Obtaining pool data for time '{}'", dateKey);
+
         try {
             if (Reservoir.contains(dateKey)) {
                 logger.debug("Cache hit! Pool found!");
@@ -66,19 +69,22 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
                 sendSwimmingPoolAsBroadcast(swimmingPool, datetime);
                 saveToCacheIfNotNull(date, swimmingPool);
             }
+        } catch (UnknownHostException e) {
+            logger.error("Could not resolve host!\n", e);
+            sendErrorMessageAsBroadcast(getString(R.string.connection_error_message));
+        } catch (SocketTimeoutException e) {
+            logger.error("Socket timed out when  downloading pool data!\n", e);
+            sendErrorMessageAsBroadcast(getString(R.string.connection_error_message));
         } catch (IOException e) {
-            if (e instanceof UnknownHostException) {
-                logger.error("Could not resolve host!");
-                sendErrorMessageAsBroadcast(getString(R.string.connection_error_message));
-            } else {
-                logger.error("Error when checking cache for key '{}'", dateKey, e);
-            }
+            logger.error("Unexpected error when trying to obtain data for time '{}'\n", dateKey, e);
+            sendErrorMessageAsBroadcast(getString(R.string.obtaining_data_unexpected_error_message));
         } catch (NoPoolParsedException e) {
-            logger.error("No pool was parsed!", e);
+            logger.error("No pool was parsed!\n", e);
+            sendErrorMessageAsBroadcast(getString(R.string.parsing_pool_unexpected_error_message));
         } finally {
             logger.debug("Calling complete wakeful intent!");
             if (WakefulBroadcastReceiver.completeWakefulIntent(intent)) {
-                logger.debug("Succesfully completed wakeful service!");
+                logger.debug("Successfully completed wakeful service!");
             }
         }
     }
