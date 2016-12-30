@@ -1,121 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:background="#bdbdbd"
-    tools:context="cz.honzakasik.bazenolomouc.MainActivity">
+    android:layout_height="match_parent">
 
-
-    <RelativeLayout
-        style="@style/SwimmingPoolActivity.Selector"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="match_parent"
+        android:background="#bdbdbd"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="cz.honzakasik.bazenolomouc.MainActivity">
 
-        <ImageButton
-            android:id="@+id/swimming_pool_arrow_left"
-            style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
-            android:src="@drawable/arrow_left_whole"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin"
-            android:contentDescription="@string/arrow_left_content_description" />
 
-        <ImageButton
-            android:id="@+id/swimming_pool_arrow_right"
-            style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
-            android:src="@drawable/arrow_right"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin"
-            android:contentDescription="@string/arrow_right_content_description" />
+        <RelativeLayout
+            style="@style/SwimmingPoolActivity.Selector"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
 
-        <TextView
-            android:text="11:30"
-            android:id="@+id/swimming_pool_time"
-            style="@style/SwimmingPoolActivity.ClockText.Landscape"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                android:id="@+id/swimming_pool_arrow_left"
+                style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/swimming_pool_clock_arrow_horizontal_margin"
+                android:contentDescription="@string/arrow_left_content_description"
+                android:src="@drawable/arrow_left_whole" />
 
-        <TextView
-            android:text="25.11.2016"
-            style="@style/SwimmingPoolActivity.DateText.Landscape"
-            android:id="@+id/swimming_pool_date"
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/swimming_pool_arrow_right"
+                style="@style/SwimmingPoolActivity.ImageButton.Arrow.Right"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/swimming_pool_clock_arrow_horizontal_margin"
+                android:contentDescription="@string/arrow_right_content_description"
+                android:src="@drawable/arrow_right" />
+
+            <TextView
+                android:id="@+id/swimming_pool_time"
+                style="@style/SwimmingPoolActivity.ClockText.Landscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="11:30" />
+
+            <TextView
+                android:id="@+id/swimming_pool_date"
+                style="@style/SwimmingPoolActivity.DateText.Landscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@id/swimming_pool_time"
+                android:text="25.11.2016" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/swimming_pool_time"
-            android:layout_marginLeft="40dp"
-            android:layout_centerVertical="true" />
+            android:background="#424242"
+            android:elevation="5dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-    </RelativeLayout>
+            <TextView
+                style="@style/SwimmingPoolActivity.OccupancyLabel.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/swimming_pool_occupation_label" />
 
+            <TextView
+                android:id="@+id/occupancy_text_view"
+                style="@style/SwimmingPoolActivity.OccupancyLabel.OccupancyLandscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible" />
 
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:background="#424242"
-        android:padding="5dp"
-        android:elevation="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <ProgressBar
+                android:id="@+id/current_occupancy_message"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:indeterminate="true" />
 
-        <TextView
-            style="@style/SwimmingPoolActivity.OccupancyLabel.Headline"
-            android:layout_width="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/swimming_pool_occupation_label"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/occupancy_text_view"
-            style="@style/SwimmingPoolActivity.OccupancyLabel.OccupancyLandscape"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
-
-        <ProgressBar
-            android:id="@+id/current_occupancy_message"
-            android:indeterminate="true"
-            android:layout_width="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_height="20dp" />
-
-    </RelativeLayout>
+        </RelativeLayout>
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <cz.honzakasik.bazenolomouc.SwimmingPoolView
-            android:visibility="invisible"
-            android:layout_centerInParent="true"
-            android:elevation="10dp"
-            android:id="@+id/swimming_pool"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <cz.honzakasik.bazenolomouc.SwimmingPoolView
+                android:id="@+id/swimming_pool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:elevation="10dp"
+                android:visibility="invisible" />
 
-        <ProgressBar
-            android:id="@+id/swimming_pool_progress_bar"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <ProgressBar
+                android:id="@+id/swimming_pool_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
 
-        <ImageButton
-            android:contentDescription="@string/refresh_button_content_description"
-            style="@style/SwimmingPoolActivity.ImageButton.Refresh.Landscape"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/swimming_pool_clock_refresh_button" />
+        </RelativeLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
