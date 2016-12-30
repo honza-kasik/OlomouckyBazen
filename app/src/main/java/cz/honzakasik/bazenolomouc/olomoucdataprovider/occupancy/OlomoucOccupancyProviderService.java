@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.OlomoucUniversalTableParser;
 
@@ -46,8 +47,10 @@ public class OlomoucOccupancyProviderService extends IntentService {
             Document document = connection.get();
             int occupancy = new OlomoucUniversalTableParser(document, CURRENT_OCCUPANCY_ROW_INDEX).parse();
             dataIntent.putExtra(OCCUPANCY_EXTRA_KEY, occupancy);
+        } catch (SocketTimeoutException e) {
+            logger.error("Socket timed out when obtaining pool occupancy!\n", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("There was an error when obtaining pool occupancy!\n", e);
         } finally {
             LocalBroadcastManager.getInstance(this).sendBroadcast(dataIntent);
             WakefulBroadcastReceiver.completeWakefulIntent(intent);

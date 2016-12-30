@@ -15,4 +15,8 @@
 
     <string name="connection_error_message">Problém s připojením k internetu. Zkuste to prosím za chvíli znovu.</string>
 
+    <string name="obtaining_data_unexpected_error_message">Nastala neočekávaná chyba při získávání dat!</string>
+
+    <string name="parsing_pool_unexpected_error_message">Nastala neočekávaná chyba při parsování dat obsazenosti bazénu!</string>
+
 </resources>
