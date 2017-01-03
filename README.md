@@ -4,7 +4,7 @@ English version follows. Neoficiální aplikace zobrazující volné dráhy a ak
 
 ## Podporované platformy
 
-* Android 5.0.2 a vyšší
+* Android 4.4 (API 19) a vyšší
 
 ## Jak sestavit `apk`
 
@@ -21,7 +21,7 @@ Application showing current occupancy and available tracks at Olomouc swimming p
 
 ## Supported platforms
 
-* Android 5.0.2 and higher
+* Android 4.4 (API 19) and higher
 
 ## How to build
 

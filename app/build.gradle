@@ -5,10 +5,10 @@ android {
     buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "cz.honzakasik.bazenolomouc"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 24
-        versionCode 6
-        versionName "0.16-alpha"
+        versionCode 7
+        versionName "0.16-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
