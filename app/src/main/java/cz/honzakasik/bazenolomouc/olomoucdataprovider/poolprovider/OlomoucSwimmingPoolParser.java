@@ -36,7 +36,7 @@ public class OlomoucSwimmingPoolParser {
         Element poolElement = document.getElementById(SWIMMING_POOL_ELEMENT_ID);
 
         if (poolElement == null) {
-            throw new NoPoolParsedException();
+            throw new NoPoolParsedException("Is your device set to correct time in Czech Republic?");
         }
 
         logger.debug(poolElement.outerHtml());
