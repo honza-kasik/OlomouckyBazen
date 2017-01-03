@@ -52,14 +52,6 @@
         <item name="android:src">@drawable/arrow_left_whole</item>
     </style>
 
-    <style name="SwimmingPoolActivity.ImageButton.Refresh">
-        <item name="android:src">@drawable/reload_icon</item>
-    </style>
-
-    <style name="SwimmingPoolActivity.ImageButton.Refresh.Landscape">
-        <item name="android:padding">20dp</item>
-    </style>
-
     <style name="SwimmingPoolActivity.ClockText">
         <item name="android:textSize">80sp</item>
         <item name="android:textColor">@color/swimmingPoolClockText</item>
