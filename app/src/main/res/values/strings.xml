@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Swimming Pool Olomouc</string>
     <string name="app_description">Unofficial application showing occupancy and available tracks for public at Olomouc swimming pool.</string>
-    <string name="app_credits">Author: Honza Kašík – honzakasik.cz. If you run into any problems, please, fill an issue on GitHub.</string>
+    <string name="app_credits">Author: Honza Kašík – honzakasik.cz. If you run into any problems, please, fill an issue at GitHub.</string>
 
     <string name="invalid_date_error_message">Invalid date!</string>
     <string name="swimming_pool_occupation_label">Swimming pool occupation</string>
@@ -19,5 +19,8 @@
     <string name="parsing_pool_unexpected_error_message">There was an unexpected error when parsing pool data!</string>
 
     <!--%2$d is swimmer count and %1$s time-->
-    <string name="pool_occupancy">There were %2$d swimmers at %1$s hours</string>
+    <plurals name="pool_occupancy">
+        <item quantity="one">There was %2$d swimmer at %1$s hours</item>
+        <item quantity="other">There were %2$d swimmers at %1$s hours</item>
+    </plurals>
 </resources>
