@@ -7,11 +7,15 @@
     <string name="arrow_left_content_description">Zobrazí obsazenost drah za třicet minut</string>
     <string name="arrow_right_content_description">Zobrazí obsazenost drah před třiceti minutami</string>
     <string name="invalid_date_error_message">Neplatné datum! Není možné jít do minulosti.</string>
-    <string name="pool_occupancy">V %1$s hodin zde bylo %2$d návštěvníků</string>
+    <plurals name="pool_occupancy">
+        <item quantity="one">V %1$s zde byl %2$d návštěvník</item>
+        <item quantity="few">V %1$s zde byli %2$d návštěvníci</item>
+        <item quantity="other">V %1$s zde bylo %2$d návštěvníků</item>
+    </plurals>
     <string name="refresh_button_content_description">Obnovit návštěvní data a vrátit se k nejbližšímu času</string>
     <string name="swimming_pool_is_closed_now">Plavecký bazén je nyní zavřený!</string>
     <string name="swimming_pool_occupation_label">Obsazenost bazénu</string>
-    <string name="update_data">Aktualizovat</string>
+    <string name="update_data">Znovu stáhnout data</string>
 
     <string name="connection_error_message">Problém s připojením k internetu. Zkuste to prosím za chvíli znovu.</string>
 

@@ -324,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.update_menu_item:
                 logger.debug("Selected update option.");
                 updateOccupancy();
+                updateSwimmingPoolViewForDatetime(datetimeDisplay.getClosestValidDateFromNow());
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -370,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
      * @param occupancy new value
      */
     private void updateOccupancyLabel(int occupancy) {
-        String text = getResources().getString(R.string.pool_occupancy);
+        String text = String.valueOf(getResources().getQuantityText(R.plurals.pool_occupancy, occupancy));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
