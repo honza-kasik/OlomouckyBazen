@@ -2,8 +2,6 @@ package cz.honzakasik.bazenolomouc.olomoucdataprovider.occupancy;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.content.WakefulBroadcastReceiver;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -14,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
+import androidx.legacy.content.WakefulBroadcastReceiver;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.OlomoucUniversalTableParser;
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.RowIndexOutOfTableBoundsException;
 
