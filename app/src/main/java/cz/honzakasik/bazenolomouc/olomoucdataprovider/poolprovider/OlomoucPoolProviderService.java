@@ -1,8 +1,6 @@
 package cz.honzakasik.bazenolomouc.olomoucdataprovider.poolprovider;
 
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.anupcowkur.reservoir.Reservoir;
 
@@ -13,13 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import androidx.legacy.content.WakefulBroadcastReceiver;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import cz.honzakasik.bazenolomouc.R;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
@@ -102,7 +101,7 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
         return swimmingPool;
     }
 
-    private String parseURLForDatetime(Date date) throws MalformedURLException {
+    private String parseURLForDatetime(Date date) {
         Calendar time = Calendar.getInstance();
         time.setTime(date);
 

@@ -6,10 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,7 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.support.v4.content.WakefulBroadcastReceiver;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.legacy.content.WakefulBroadcastReceiver;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.occupancy.OlomoucOccupancyProviderService;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPool;
 import cz.honzakasik.bazenolomouc.pool.SwimmingPoolProviderService;
@@ -58,39 +59,43 @@ public class MainActivity extends AppCompatActivity {
             logger.debug("Broadcast received!");
 
             String action = intent.getAction();
-            if (action.equals(SwimmingPoolProviderService.ACTION_SWIMMING_POOL_DOWNLOADED)) {
-                logger.debug("Swimming pool broadcast received");
-                SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
-                long datetime = intent.getLongExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, -1);
+            switch (action) {
+                case SwimmingPoolProviderService.ACTION_SWIMMING_POOL_DOWNLOADED:
+                    logger.debug("Swimming pool broadcast received");
+                    SwimmingPool swimmingPool = intent.getParcelableExtra(SwimmingPoolProviderService.SWIMMING_POOL_EXTRA_IDENTIFIER);
+                    long datetime = intent.getLongExtra(SwimmingPoolProviderService.DATETIME_EXTRA_IDENTIFIER, -1);
 
-                //if timestamp is corresponding to currently set time
-                if (datetime == datetimeDisplay.getCurrentlyDisplayedDate().getTimeInMillis()) {
-                    swimmingPoolView.setSwimmingPool(swimmingPool);
+                    //if timestamp is corresponding to currently set time
+                    if (datetime == datetimeDisplay.getCurrentlyDisplayedDate().getTimeInMillis()) {
+                        swimmingPoolView.setSwimmingPool(swimmingPool);
 
-                    CyclicLayoutLoadManager.loadFinished(swipeRefreshLayout);
-                    swimmingPoolProgressBar.setVisibility(View.INVISIBLE);
-                    swimmingPoolView.setVisibility(View.VISIBLE);
+                        CyclicLayoutLoadManager.loadFinished(swipeRefreshLayout);
+                        swimmingPoolProgressBar.setVisibility(View.INVISIBLE);
+                        swimmingPoolView.setVisibility(View.VISIBLE);
 
-                    swimmingPoolView.invalidate();
-                } else {
-                    if (datetime == -1) {
-                        logger.error("Datetime was not attached!");
+                        swimmingPoolView.invalidate();
                     } else {
-                        logger.warn("Received swimming poool for different time!");
+                        if (datetime == -1) {
+                            logger.error("Datetime was not attached!");
+                        } else {
+                            logger.warn("Received swimming poool for different time!");
+                        }
                     }
-                }
 
-            } else if (action.equals(OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED)) {
-                if (intent.hasExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY)) {
-                    int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
-                    logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
-                    updateOccupancyLabel(occupancy);
-                } else {
-                    logger.debug("Occupancy intent received with no occupancy, not updating!");
-                }
+                    break;
+                case OlomoucOccupancyProviderService.ACTION_OCCUPANCY_PROVIDED:
+                    if (intent.hasExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY)) {
+                        int occupancy = intent.getIntExtra(OlomoucOccupancyProviderService.OCCUPANCY_EXTRA_KEY, -1);
+                        logger.debug("Occupancy broadcast received with value '{}'.", occupancy);
+                        updateOccupancyLabel(occupancy);
+                    } else {
+                        logger.debug("Occupancy intent received with no occupancy, not updating!");
+                    }
 
-            } else if (action.equals(SwimmingPoolProviderService.ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE)) {
-                showErrorMessage(intent.getStringExtra(SwimmingPoolProviderService.ERROR_MESSAGE_EXTRA_IDENTIFIER));
+                    break;
+                case SwimmingPoolProviderService.ACTION_ERROR_OCCURRED_IN_PROVIDER_SERVICE:
+                    showErrorMessage(intent.getStringExtra(SwimmingPoolProviderService.ERROR_MESSAGE_EXTRA_IDENTIFIER));
+                    break;
             }
         }
     };
