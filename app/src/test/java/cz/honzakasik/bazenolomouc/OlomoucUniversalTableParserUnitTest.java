@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.OlomoucUniversalTableParser;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.RowIndexOutOfTableBoundsException;
 
 public class OlomoucUniversalTableParserUnitTest {
 
@@ -58,21 +59,21 @@ public class OlomoucUniversalTableParserUnitTest {
             "</tbody></table>";
 
     @Test
-    public void testCurrentOccupancyByRowIndex() {
+    public void testCurrentOccupancyByRowIndex() throws RowIndexOutOfTableBoundsException {
         Document document = Jsoup.parse(OCCUPANCY_SCRIPT_OUTPUT);
 
         Assert.assertEquals(Integer.valueOf(83), new OlomoucUniversalTableParser(document, 1).parse());
     }
 
     @Test
-    public void testDailyOccupancyByRowIndex() {
+    public void testDailyOccupancyByRowIndex() throws RowIndexOutOfTableBoundsException {
         Document document = Jsoup.parse(OCCUPANCY_SCRIPT_OUTPUT);
 
         Assert.assertEquals(Integer.valueOf(129), new OlomoucUniversalTableParser(document, 2).parse());
     }
 
     @Test
-    public void testSaunaOccupancyByRowIndex() {
+    public void testSaunaOccupancyByRowIndex() throws RowIndexOutOfTableBoundsException {
         Document document = Jsoup.parse(OCCUPANCY_SCRIPT_OUTPUT);
 
         Assert.assertEquals(Integer.valueOf(2), new OlomoucUniversalTableParser(document, 9).parse());

@@ -39,7 +39,7 @@ public class OlomoucUniversalTableParser {
         this.rowIndex = rowIndex;
     }
 
-    public Integer parse() {
+    public Integer parse() throws RowIndexOutOfTableBoundsException {
         if (key == null) {
             return findValueUsingRowIndex();
         } else {
@@ -66,8 +66,17 @@ public class OlomoucUniversalTableParser {
         }
     }
 
-    private Integer findValueUsingRowIndex() {
+    /**
+     * Get value from a row using an index of row in table. Value should be present in sibling cell.
+     * @return an actual value
+     * @throws RowIndexOutOfTableBoundsException when row index is out of table bounds
+     */
+    private Integer findValueUsingRowIndex() throws RowIndexOutOfTableBoundsException {
         Elements rowElements = document.getElementsByTag(HTML_TR);
+        if (rowIndex >= rowElements.size()) {
+            throw new RowIndexOutOfTableBoundsException("Index " + rowIndex + " is out of table " +
+                    "since table has only " + rowElements.size() + " rows.");
+        }
         Element theChosenOne = rowElements.get(rowIndex);
         Elements cells = theChosenOne.getElementsByTag(HTML_TD);
         Element valueElement = cells.get(1);
