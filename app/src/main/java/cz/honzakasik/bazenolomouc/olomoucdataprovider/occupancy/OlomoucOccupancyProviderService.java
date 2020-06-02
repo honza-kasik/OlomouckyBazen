@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 import cz.honzakasik.bazenolomouc.olomoucdataprovider.OlomoucUniversalTableParser;
+import cz.honzakasik.bazenolomouc.olomoucdataprovider.RowIndexOutOfTableBoundsException;
 
 public class OlomoucOccupancyProviderService extends IntentService {
 
@@ -45,7 +46,12 @@ public class OlomoucOccupancyProviderService extends IntentService {
         Connection connection = Jsoup.connect(URL);
         try {
             Document document = connection.get();
-            int occupancy = new OlomoucUniversalTableParser(document, CURRENT_OCCUPANCY_ROW_INDEX).parse();
+            int occupancy = 0;
+            try {
+                occupancy = new OlomoucUniversalTableParser(document, CURRENT_OCCUPANCY_ROW_INDEX).parse();
+            } catch (RowIndexOutOfTableBoundsException e) {
+                logger.error("Unable to parse the occupancy from page.", e);
+            }
             dataIntent.putExtra(OCCUPANCY_EXTRA_KEY, occupancy);
         } catch (SocketTimeoutException e) {
             logger.error("Socket timed out when obtaining pool occupancy!\n", e);

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "cz.honzakasik.bazenolomouc"
         minSdkVersion 19
@@ -20,18 +20,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.0.2'
-    testCompile 'junit:junit:4.12'
-    compile 'org.jsoup:jsoup:1.10.1'
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'com.github.tony19:logback-android-core:1.1.1-6'
-    compile('com.github.tony19:logback-android-classic:1.1.1-6') {
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    implementation 'org.jsoup:jsoup:1.10.1'
+    implementation 'org.slf4j:slf4j-api:1.7.21'
+    implementation 'com.github.tony19:logback-android-core:1.1.1-6'
+    implementation('com.github.tony19:logback-android-classic:1.1.1-6') {
         // workaround issue #73
         exclude group: 'com.google.android', module: 'android'
     }
-    compile 'com.anupcowkur:reservoir:3.1.0'
+    implementation 'com.anupcowkur:reservoir:3.1.0'
 }
