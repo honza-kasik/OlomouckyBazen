@@ -51,6 +51,7 @@ public class OlomoucOccupancyProviderService extends IntentService {
                 occupancy = new OlomoucUniversalTableParser(document, CURRENT_OCCUPANCY_ROW_INDEX).parse();
             } catch (RowIndexOutOfTableBoundsException e) {
                 logger.error("Unable to parse the occupancy from page.", e);
+                occupancy = -1;
             }
             dataIntent.putExtra(OCCUPANCY_EXTRA_KEY, occupancy);
         } catch (SocketTimeoutException e) {
