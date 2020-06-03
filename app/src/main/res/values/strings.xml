@@ -24,5 +24,5 @@
         <item quantity="other">There were %2$d swimmers at %1$s</item>
     </plurals>
 
-    <string name="pool_occupancy_data_not_available">Occupancy data are not available</string>
+    <string name="pool_occupancy_data_not_available">Count of swimmers in pool is not available</string>
 </resources>

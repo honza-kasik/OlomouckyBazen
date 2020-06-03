@@ -22,6 +22,6 @@
     <string name="obtaining_data_unexpected_error_message">Nastala neočekávaná chyba při získávání dat!</string>
 
     <string name="parsing_pool_unexpected_error_message">Nastala neočekávaná chyba při parsování dat obsazenosti bazénu!</string>
-    <string name="pool_occupancy_data_not_available">Data o obsazenosti nejsou dostupná</string>
+    <string name="pool_occupancy_data_not_available">Aktuální počet plavců není dostupný</string>
 
 </resources>
