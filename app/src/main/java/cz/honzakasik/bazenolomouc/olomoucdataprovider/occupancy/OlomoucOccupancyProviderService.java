@@ -26,7 +26,7 @@ public class OlomoucOccupancyProviderService extends IntentService {
             OCCUPANCY_EXTRA_KEY = "OCCUPANCY_KEY";
 
     private static final String
-            URL = "http://olterm.cz/get_obsazenost.php";
+            URL = "https://olterm.cz/get_obsazenost.php";
 
     private static final int CURRENT_OCCUPANCY_ROW_INDEX = 1;
 
