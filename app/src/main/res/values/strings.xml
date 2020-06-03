@@ -4,7 +4,7 @@
     <string name="app_credits">Author: Honza Kašík – honzakasik.cz. If you run into any problems, please, fill an issue at GitHub.</string>
 
     <string name="invalid_date_error_message">Invalid date!</string>
-    <string name="swimming_pool_occupation_label">Swimming pool occupation</string>
+    <string name="swimming_pool_occupation_label">Swimming pool occupancy</string>
     <string name="arrow_left_content_description">Show pool T-30 minutes</string>
     <string name="arrow_right_content_description">Show pool T+30 minutes</string>
     <string name="refresh_button_content_description">Refresh occupancy data and reset to closest time</string>
@@ -23,4 +23,6 @@
         <item quantity="one">There was %2$d swimmer at %1$s</item>
         <item quantity="other">There were %2$d swimmers at %1$s</item>
     </plurals>
+
+    <string name="pool_occupancy_data_not_available">Occupancy data are not available</string>
 </resources>

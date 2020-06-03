@@ -376,10 +376,15 @@ public class MainActivity extends AppCompatActivity {
      * @param occupancy new value
      */
     private void updateOccupancyLabel(int occupancy) {
-        String text = String.valueOf(getResources().getQuantityText(R.plurals.pool_occupancy, occupancy));
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        occupancyTextView.setText(String.format(text, dateFormat.format(new Date()), occupancy));
+        String text;
+        if (occupancy == -1) {
+            text = getResources().getString(R.string.pool_occupancy_data_not_available);
+        } else {
+            final String template = String.valueOf(getResources().getQuantityText(R.plurals.pool_occupancy, occupancy));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            text = String.format(template, dateFormat.format(new Date()), occupancy);
+        }
+        occupancyTextView.setText(text);
 
         CyclicLayoutLoadManager.loadFinished(swipeRefreshLayout);
         occupancyTextProgressBar.setVisibility(View.INVISIBLE);
