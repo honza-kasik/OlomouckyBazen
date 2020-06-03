@@ -28,7 +28,7 @@ public class OlomoucPoolProviderService extends SwimmingPoolProviderService {
     private static final Logger logger = LoggerFactory.getLogger(OlomoucPoolProviderService.class);
 
     private static final String
-            URL = "http://www.olterm.cz/plavecky-bazen/rozpis-plavani?den={DAY}&mesic={MONTH}&rok={YEAR}&hodina={HOURS}&minuta={MINUTES}",
+            URL = "https://www.olterm.cz/plavecky-bazen/rozpis-plavani?den={DAY}&mesic={MONTH}&rok={YEAR}&hodina={HOURS}&minuta={MINUTES}",
             DAY = Pattern.quote("{DAY}"),
             MONTH = Pattern.quote("{MONTH}"),
             YEAR = Pattern.quote("{YEAR}"),
